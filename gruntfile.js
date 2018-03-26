@@ -79,7 +79,7 @@ module.exports = function(grunt){
 		},
 		concat: {
 			options: {
-				separator: "\n\n",
+				separator: "\n",
 			},
 			dist: {
 				src: [
