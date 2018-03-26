@@ -4,4 +4,5 @@ node_modules/**/*
 bower_components/**/*
 test/**/*
 tests/**/*
+package-lock.json
 !**/.gitignore
