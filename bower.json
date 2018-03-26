@@ -1,0 +1,17 @@
+{
+  "name": "raffle",
+  "description": "",
+  "main": "package.json",
+  "authors": [
+    "ProjectSoft <projectsoft2009@yandex.ru>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/avon-world/raffle",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
