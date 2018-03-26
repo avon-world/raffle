@@ -4,36 +4,13 @@ module.exports = function(grunt){
 	var tasksConfig = {
 		pkg: grunt.file.readJSON("package.json"),
 		meta: {
-			banner: '/**\n' +
-					' * \n'+
-					' * Copyright 2018 @ProjectSoft<projectsoft2009@yandex.ru> \n'+
-					' * Licensed under the MIT license. \n'+
-					' * \n'+
-					' */\n',
-			bannercss: '/*!\n' +
-					' * \n'+
-					' * Copyright 2018 @ProjectSoft<projectsoft2009@yandex.ru> \n'+
-					' * Licensed under the MIT license. \n'+
-					' * \n'+
-					' */\n'
-		},
-		usebanner: {
-			taskName: {
-				options: {
-					position: 'top',
-					banner: '<%= meta.bannercss %>',
-					linebreak: true
-				},
-				files: {
-					src: ['docs/assets/css/main.css']
-				}
-			}
+			banners: '/*! <%= pkg.name %> v<%= pkg.version %> | <%= pkg.license %> License | <%= pkg.homepage %> */'
 		},
 		uglify: {
 			compile: {
 				options: {
 					sourceMap: true,
-					banner: '<%= meta.banner %>'
+					banner: '<%= meta.banners %>'
 				},
 				files: {
 					'docs/assets/js/main.js': 'src/js/main.js'
@@ -54,7 +31,37 @@ module.exports = function(grunt){
 				},
 				options : {
 					compress: false,
-					ieCompat: false
+					ieCompat: false,
+					banner: '<%= meta.banners %>',
+					plugins: [
+						new (require('less-plugin-clean-css'))({
+							level: {
+								1: {
+									specialComments: 0
+								}
+							}
+						})
+					],
+				}
+			},
+			normalize: {
+				files : {
+					'test/css/normalize.css' : [
+						'bower_components/normalize-css/normalize.css',
+					]
+				},
+				options : {
+					compress: false,
+					ieCompat: false,
+					plugins: [
+						new (require('less-plugin-clean-css'))({
+							level: {
+								1: {
+									specialComments: 0
+								}
+							}
+						})
+					],
 				}
 			}
 		},
@@ -65,10 +72,21 @@ module.exports = function(grunt){
 			},
 			css: {
 				files: {
-					'docs/assets/css/main.css' : [
-						'test/css/main.css'
-					]
+					'tests/css/main.css' : ['test/css/main.css'],
+					'tests/css/normalize.css' : ['test/css/normalize.css'],
 				}
+			},
+		},
+		concat: {
+			options: {
+				separator: "\n\n",
+			},
+			dist: {
+				src: [
+					'tests/css/normalize.css',
+					'tests/css/main.css'
+				],
+				dest: 'docs/assets/css/main.css',
 			},
 		},
 		pug: {
@@ -124,10 +142,10 @@ module.exports = function(grunt){
 					'imagemin',
 					'less',
 					'autoprefixer',
+					'concat',
 					'jshint',
 					'uglify',
 					'pug',
-					'usebanner',
 					'notify:done'
 				]
 			}

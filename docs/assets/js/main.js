@@ -1,9 +1,3 @@
-/**
- * 
- * Copyright 2018 @ProjectSoft<projectsoft2009@yandex.ru> 
- * Licensed under the MIT license. 
- * 
- */
-
+/*! raffle v1.0.0 | ISC License | https://github.com/avon-world/raffle */
 
 //# sourceMappingURL=main.js.map
