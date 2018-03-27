@@ -1,0 +1,22 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	.header {
+		display: block;
+	}
+	.main {
+		flex-grow: 1;
+		flex-shrink: 0;
+		flex-basis: auto;
+	}
+	.footer {
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
+	}
+	.header,
+	.footer {
+		.unselect();
+	}
+}
