@@ -6,9 +6,19 @@
 		display: block;
 	}
 	.main {
+		display: flex;
 		flex-grow: 1;
 		flex-shrink: 0;
-		flex-basis: auto;
+		flex-basis: 100%;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: center;
+		align-content: center;
+		align-items: center;
+		.container {
+			flex: 0 0 auto;
+			align-self: center;
+		}
 	}
 	.footer {
 		flex-grow: 0;
@@ -18,5 +28,8 @@
 	.header,
 	.footer {
 		.unselect();
+	}
+	&-title {
+		color: #ff0085;
 	}
 }

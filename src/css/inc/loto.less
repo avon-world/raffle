@@ -1,0 +1,29 @@
+#loto {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	border: 1px solid #ccc;
+	&:empty {
+		border: unset;
+	}
+	> span {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #fff;
+		text-align: center;
+		width: 10%;
+		height: 0px;
+		padding-bottom: 10%;
+		box-shadow: 0px 0px 3px #ccc;
+		&:before {
+			content: attr(data-number);
+			position: absolute;
+			height: 100%;
+			top: 37%;
+			font-weight: 500;
+		}
+	}
+}

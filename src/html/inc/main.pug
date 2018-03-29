@@ -1,8 +1,30 @@
 main.main
 	.container
-		.row
-			.full
-				|Main
-				br
-				a(href="javascript:;")
-					|LINK
+		.full.main-wrapper(data-plugin="forestedglass" data-target="main.main" data-blur="15")
+			h1.page-title.text-center
+				|Розыгрыш лотереи
+			#lotereya
+				.row
+					.columns
+						.columns-settings
+							label.columns-settings-label
+								strong
+									|Общее количество номеров
+								br
+								input#size(type="number" min="1" value="1")
+							label.columns-settings-label
+								strong
+									|Количество разигрываемых номеров
+								br
+								input#sizenum(type="number" min="1" value="1")
+							label.columns-settings-label
+								strong
+									|Разыгрываемый приз/призы
+								br
+								textarea#priz(row="4")
+							.columns-settings-button.text-center
+								button#btnresult
+									|Разыграть
+						.columns-loto
+							.loto
+								#loto

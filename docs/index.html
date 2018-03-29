@@ -6,14 +6,14 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
 		<title>Генератор розыгрыша лотереи</title>
-		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-		<meta name="title" content="">
-		<meta name="description" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+		<meta name="title" content="Генератор розыгрыша лотереи">
+		<meta name="description" content="Генератор розыгрыша лотереи">
 		<meta name="keywords" content="">
-		<meta name="image" content="images/notify.png">
+		<meta name="image" content="assets/images/notify.png">
 		<meta name="robots" content="index, follow">
-		<meta property="og:title" content="">
-		<meta property="og:description" content="">
+		<meta property="og:title" content="Генератор розыгрыша лотереи">
+		<meta property="og:description" content="Генератор розыгрыша лотереи">
 		<meta property="og:url" content="">
 		<meta property="og:locale" content="ru_RU">
 		<meta property="og:type" content="website">
@@ -21,22 +21,49 @@
 		<meta property="og:image" content="assets/images/notify.png">
 		<style>
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{-moz-box-sizing:border-box;box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{-moz-box-sizing:border-box;box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}
-/*! raffle v1.0.0 | ISC License | https://github.com/avon-world/raffle */*,:after,:before{-moz-box-sizing:border-box;box-sizing:border-box}body{font-family:Roboto;font-size:16px}img{max-width:100%;height:auto}a,a:focus{outline-width:unset;outline-color:unset;outline-style:unset}p{margin-bottom:12px}p:last-child{margin-bottom:0}ol,ul{margin-top:0;margin-bottom:12px}.center-block{margin-left:auto;margin-right:auto}.text-left{text-align:left}.text-right{text-align:right}.text-center{text-align:center}.text-justify{text-align:justify}.clearfix:after,.clearfix:before{display:table;content:" "}.clearfix:after{clear:both}.row{margin-left:-15px;margin-right:-15px}.container{padding-left:15px;padding-right:15px;max-width:992px;margin-left:auto;margin-right:auto}.container:after,.container:before{display:table;content:" "}.container:after{clear:both}.full{width:100%;padding-left:15px;padding-right:15px}.page{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;min-height:100vh}.page .header{display:block}.page .main{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto}.page .footer{-webkit-box-flex:0;-webkit-flex-grow:0;-ms-flex-positive:0;flex-grow:0;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto}.page .footer,.page .header{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.header{padding:15px;background-color:#ff38a0}.header-link{color:#fff}.header-link,.header-link:focus,.header-link:hover{text-decoration:none}.main{padding-top:15px;padding-bottom:15px}.footer{padding:15px;background-color:#ff38a0;color:#fff;text-align:center}.footer a{color:#fff}
+/*! raffle v1.0.0 | ISC License | https://github.com/avon-world/raffle */*,:after,:before{-moz-box-sizing:border-box;box-sizing:border-box}body{font-family:Roboto;font-size:16px;font-weight:300}img{max-width:100%;height:auto}a,a:focus{outline-width:unset;outline-color:unset;outline-style:unset}p{margin-bottom:12px}p:last-child{margin-bottom:0}ol,ul{margin-top:0;margin-bottom:12px}h1,h2,h3,h4,h5,h6{font-family:Roboto,sans-serif;font-weight:400}.center-block{margin-left:auto;margin-right:auto}.text-left{text-align:left}.text-right{text-align:right}.text-center{text-align:center}.text-justify{text-align:justify}.clearfix:after,.clearfix:before{display:table;content:" "}.clearfix:after{clear:both}.row{margin-left:-15px;margin-right:-15px}.container{padding-left:15px;padding-right:15px;max-width:992px;width:100%;margin-left:auto;margin-right:auto}.container:after,.container:before{display:table;content:" "}.container:after{clear:both}.full{width:100%;padding-left:15px;padding-right:15px}.page{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;min-height:100vh}.page .header{display:block}.page .main{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:100%;-ms-flex-preferred-size:100%;flex-basis:100%;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-align-content:center;-ms-flex-line-pack:center;align-content:center;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center}.page .main .container{-webkit-box-flex:0;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;-webkit-align-self:center;-ms-flex-item-align:center;align-self:center}.page .footer{-webkit-box-flex:0;-webkit-flex-grow:0;-ms-flex-positive:0;flex-grow:0;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-flex-basis:auto;-ms-flex-preferred-size:auto;flex-basis:auto}.page .footer,.page .header{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.page-title{color:#ff0085}.header{padding:15px;background-color:#ff38a0}.header-link{color:#fff}.header-link,.header-link:focus,.header-link:hover{text-decoration:none}.main{position:relative;padding-top:15px;padding-bottom:15px;background-image:url(assets/images/jarallax.jpg);background-position:50% 50%;background-repeat:no-repeat;background-size:cover;background-attachment:fixed}.main-wrapper{padding:15px;background-color:rgba(255,255,255,.1);border-radius:3px}.main .container{position:relative;z-index:2}.columns{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-webkit-flex-direction:row-reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse}.columns-loto,.columns-settings{padding-left:15px;padding-right:15px}.columns-settings{width:35%}.columns-settings-label{display:block;margin-bottom:12px}.columns-settings-label>input,.columns-settings-label>textarea{margin-top:5px;width:100%}.columns-settings-label>textarea{resize:vertical;padding:5px;min-height:80px}.columns-loto{width:65%}#loto{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;border:1px solid #ccc}#loto:empty{border:unset}#loto>span{position:relative;overflow:hidden;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;background-color:#fff;text-align:center;width:10%;height:0;padding-bottom:10%;box-shadow:0 0 3px #ccc}#loto>span:before{content:attr(data-number);position:absolute;height:100%;top:37%;font-weight:500}.footer{padding:15px;background-color:#ff38a0;color:#fff;text-align:center}.footer a{color:#fff}
 		</style>
 	</head>
 	<body>
 		<div class="page">
 			<header class="header">
-				<div class="container">
-					<div class="row">
-						<div class="full"><a class="header-link" href="">Розыгрыш ЛОТЕРЕИ</a></div>
+				<div class="row">
+					<div class="container">
+						<div class="row">
+							<div class="full"><a class="header-link" href="">Розыгрыш ЛОТЕРЕИ</a></div>
+						</div>
 					</div>
 				</div>
 			</header>
 			<main class="main">
 				<div class="container">
-					<div class="row">
-						<div class="full">Main<br><a href="javascript:;">LINK</a></div>
+					<div class="full main-wrapper" data-plugin="forestedglass" data-target="main.main" data-blur="15">
+						<h1 class="page-title text-center">Розыгрыш лотереи</h1>
+						<div id="lotereya">
+							<div class="row">
+								<div class="columns">
+									<div class="columns-settings">
+										<label class="columns-settings-label"><strong>Общее количество номеров</strong><br>
+											<input id="size" type="number" min="1" value="1">
+										</label>
+										<label class="columns-settings-label"><strong>Количество разигрываемых номеров</strong><br>
+											<input id="sizenum" type="number" min="1" value="1">
+										</label>
+										<label class="columns-settings-label"><strong>Разыгрываемый приз/призы</strong><br>
+											<textarea id="priz" row="4"></textarea>
+										</label>
+										<div class="columns-settings-button text-center">
+											<button id="btnresult">Разыграть</button>
+										</div>
+									</div>
+									<div class="columns-loto">
+										<div class="loto">
+											<div id="loto"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</main>
@@ -66,8 +93,12 @@ window.yepnope=function(a,b){function c(){}function d(a){return Object(a)===a}fu
 });
 var time = (new Date()).getTime();
 yepnope('assets/js/jquery.min.js?'+time, undefined, function() {
-	yepnope('assets/js/main.js?'+time, undefined, function() {
-		
+	yepnope('assets/js/appinit.js?'+time, undefined, function() {
+		yepnope('assets/js/jquery.forestedglass.min.js?'+time, undefined, function() {
+			yepnope('assets/js/main.js?'+time, undefined, function() {
+				
+			})
+		})
 	})
 })
 

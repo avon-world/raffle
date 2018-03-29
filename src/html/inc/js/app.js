@@ -11,7 +11,11 @@ yepnope('https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js', undefi
 });
 var time = (new Date()).getTime();
 yepnope('assets/js/jquery.min.js?'+time, undefined, function() {
-	yepnope('assets/js/main.js?'+time, undefined, function() {
-		
+	yepnope('assets/js/appinit.js?'+time, undefined, function() {
+		yepnope('assets/js/jquery.forestedglass.min.js?'+time, undefined, function() {
+			yepnope('assets/js/main.js?'+time, undefined, function() {
+				
+			})
+		})
 	})
 })

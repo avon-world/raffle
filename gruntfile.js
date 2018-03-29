@@ -14,17 +14,32 @@ module.exports = function(grunt){
 			uglify: {
 				compile: {
 					options: {
-						sourceMap: true,
-						banner: '<%= meta.banners %>'
+						//sourceMap: true,
+						banner: '<%= meta.banners %>',
+						mangle: {
+							reserved: ['jQuery']
+						},
+						sourceMap: {
+							includeSources: true
+						},
 					},
-					files: {
-						'docs/assets/js/main.js': 'src/js/main.js'
-					}
+					files: [
+						{
+							expand: true,
+							flatten : true,
+							src: [
+								'src/js/*.js'
+							],
+							dest: 'docs/assets/js/',
+							filter: 'isFile'
+							//'docs/assets/js/main.js': 'src/js/main.js'
+						}
+					]
 				}
 			},
 			jshint: {
 				src: [
-					'src/js/main.js'
+					'src/js/*.js'
 				],
 			},
 			less: {
@@ -104,6 +119,15 @@ module.exports = function(grunt){
 					],
 					dest: 'docs/assets/js/',
 				},
+				forested: {
+					expand: true,
+					cwd: 'bower_components/jquery.forestedglass/dist',
+					src: [
+						'jquery.forestedglass.min.js',
+						'jquery.forestedglass.min.js.map'
+					],
+					dest: 'docs/assets/js/',
+				}
 			},
 			pug: {
 				files: {

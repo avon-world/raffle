@@ -1,0 +1,28 @@
+.columns {
+	display: flex;
+	flex-direction: row-reverse;
+	&-settings,
+	&-loto {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	&-settings {
+		width: 35%;
+		&-label {
+			display: block;
+			margin-bottom: 12px;
+			> input, > textarea {
+				margin-top: 5px;
+				width: 100%;
+			}
+			> textarea {
+				resize: vertical;
+				padding: 5px;
+				min-height: 80px;
+			}
+		}
+	}
+	&-loto {
+		width: 65%;
+	}
+}
