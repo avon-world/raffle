@@ -9,14 +9,14 @@ main.main
 						.columns-settings
 							label.columns-settings-label
 								strong
-									|Общее количество номеров
-								br
-								input#size(type="number" min="1" value="1")
-							label.columns-settings-label
-								strong
 									|Количество разигрываемых номеров
 								br
-								input#sizenum(type="number" min="1" value="1")
+								.inputnumber
+									.inputnumber-spin.up
+										|+
+									.inputnumber-spin.down
+										|−
+									input#sizenum(type="number" min="1" value="1")
 							label.columns-settings-label
 								strong
 									|Разыгрываемый приз/призы

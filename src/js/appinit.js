@@ -12,8 +12,84 @@ Array.prototype.shuffle = function( b ){
 	Object.assign(this, newArr);
 	return this;
 };
+window.debuger = true;
 ;(function($){
 	window.debuger = (typeof window.debuger == "boolean") ? window.debuger : false;
+	$('.inputnumber').each(function(){
+		var $this = $(this),
+			$up = $(".up", $this),
+			$down = $(".down", $this),
+			$input = $("input[type=number]", $this),
+			val = parseFloat($input.val()) ? parseFloat($input.val()) : 0,
+			step = parseFloat($input.attr("step")) ? parseFloat($input.attr("step")) : 1,
+			ani = 0,
+			updown = 0,
+			pause = 250,
+			speed = 50,
+			setDownUpVal = function(type){
+				var virt = parseFloat($input.val()) ? parseFloat($input.val()) : 0;
+				val = virt;
+				switch(type){
+					case 'min':
+						if(parseFloat($input.attr("min"))){
+							var min = parseFloat($input.attr("min"));
+							virt = val - step;
+							val = virt < min ? val : virt;
+						}else{
+							val = val - step;
+						}
+						break;
+					case 'max':
+						if(parseFloat($input.attr("max"))){
+							var max = parseFloat($input.attr("max"));
+							virt = val + step;
+							val = virt > max ? val : virt;
+						}else{
+							val = val + step;
+						}
+						break;
+					default:
+						break;
+				}
+				$input.val(val).trigger('input');
+			};
+		$(".up, .down", $this).css({
+			cursor: 'pointer'
+		});
+		$input.on("input change", function(e){
+			val = parseFloat($input.val()) ? parseFloat($input.val()) : 0;
+		});
+		$down.on("click", function(e){
+			e.preventDefault();
+			return !1;
+		}).on("mousedown", function(){
+			clearInterval(ani);
+			clearTimeout(updown);
+			setDownUpVal('min');
+			updown = setTimeout(function(){
+				ani = setInterval(function(){
+					setDownUpVal('min');
+				}, speed);
+			}, pause);
+		});
+		$up.on("click", function(e){
+			e.preventDefault();
+			return !1;
+		}).on("mousedown", function(){
+			clearInterval(ani);
+			clearTimeout(updown);
+			setDownUpVal('max');
+			updown = setTimeout(function(){
+				ani = setInterval(function(){
+					setDownUpVal('max');
+				}, speed);
+			}, pause);
+		});
+		$(document).on('mouseup', function(e){
+			clearInterval(ani);
+			clearTimeout(updown);
+		});
+	});
 	var arr = [],
 		interval = 0,
 		$block = $('#loto'),
@@ -53,8 +129,7 @@ Array.prototype.shuffle = function( b ){
 	$("input[type='number']").on("blur", function(e){
 		var $this = $(this),
 			id = $this.attr('id'),
-			val = parseInt($this.val()),
-			numbers = $("#size");
+			val = parseInt($this.val());
 		if(!val){
 			val = 1;
 			$this.val(val);
