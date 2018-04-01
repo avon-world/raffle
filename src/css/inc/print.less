@@ -1,0 +1,89 @@
+@media print {
+	a {
+		color: #000 !important;
+		text-decoration: none !important;
+	}
+	.header,
+	.forestedglass {
+		display: none !important;
+	}
+	.footer{
+		background-color: unset;
+		color: #000;
+	}
+	.main {
+		background-image: unset;
+		&-wrapper {
+			box-shadow: unset;
+			border: unset;
+			border-radius: unset;
+		}
+	}
+	.columns {
+		flex-direction: column;
+		&-settings,
+		&-loto {
+			display: none;
+		}
+	}
+	.page {
+		.full.date, 
+		&-title {
+			margin-top: 0px;
+		}
+		
+		.main {
+			flex-grow: 1;
+			flex-basis: auto;
+			align-items: flex-start;
+			justify-content: flex-start;
+			align-content: flex-start;
+			.container {
+				align-self: flex-start;
+			}
+		}
+	}
+	ul#result {
+		li.prize {
+			width: 100%;
+			flex: 1 0 100%;
+			margin-bottom: 1.22px;
+			line-height: 1.5;
+			box-shadow: unset;
+			padding-bottom: 8px;
+			&:last-child {
+				padding-bottom: unset;
+			}
+			span {
+				box-shadow: unset;
+				&.bg {
+					display: none;
+				}
+			}
+			&:before {
+				box-shadow: unset;
+				font-size: inherit !important;
+				color: #000;
+				background-color: unset;
+				height: auto;
+				min-height: unset;
+				max-height: unset;
+			}
+			&:after {
+				display: none;
+			}
+		}
+	}
+	.date {
+		&:after {
+			content: attr(data-date);
+		}
+	}
+	.develop {
+		a[href] {
+			&:after {
+				content: " (" attr(href) ")";
+			}
+		}
+	}
+}

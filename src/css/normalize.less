@@ -44,6 +44,23 @@ input[type=number]{
 		display: none;
 	}
 }
+input[type=submit],
+input[type=button],
+input[type=reset],
+button {
+	cursor: pointer;
+	&.disabled,
+	&[disabled]{
+		cursor: not-allowed;
+	}
+}
+input,
+button {
+	&[disabled] {
+		background-color: #fbfbfb;
+		cursor: not-allowed;
+	}
+}
 .center-block {
 	margin-left: auto;
 	margin-right: auto;
@@ -94,4 +111,9 @@ input[type=number]{
 	width: 100%;
 	padding-left: 15px;
 	padding-right: 15px;
+}
+.develop {
+	display: block;
+	.text-center();
+	padding-top:10px;
 }

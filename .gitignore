@@ -1,3 +1,4 @@
+desktop.*
 **/.*
 bin/**/*
 node_modules/**/*

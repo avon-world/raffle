@@ -16,15 +16,43 @@ main.main
 										|+
 									.inputnumber-spin.down
 										|−
-									input#sizenum(type="number" min="1" value="1")
-							label.columns-settings-label
+									input#sizenum(type="number" min="1" max="100" value="1")
+							.columns-settings-label
 								strong
 									|Разыгрываемый приз/призы
-								br
-								textarea#priz(row="4")
-							.columns-settings-button.text-center
-								button#btnresult
-									|Разыграть
+								.columns-settings-label-prizes
+									ul#prizes
+										li.prize(data-number="1")
+											span.bg
+											span.text
+												|Name prize;
+										li.prize(data-number="2")
+											span.bg
+											span.text
+												|Name prize;
+										li.prize(data-number="3")
+											span.bg
+											span.text
+												|Name prize;
+								.columns-settings-label-buttons
+									button.btn.rf-add#btnadd(title="Добавить приз")
+									button.btn.rf-clear#btnclear(title="Очистить")
 						.columns-loto
 							.loto
 								#loto
+								.loto-raffle
+									button.btn.rf-raffle#btnraffle(title="Розыграть")
+					.columns.resultraffle
+						h2.text-center.block-center.full.date
+							|Результат розыгрыша лотереи
+						.columns-result.full
+							- var n = 1;
+							ul#result
+							while n < 51
+								- var t = n++
+								li.prize(data-number= t)
+									span.bg
+									span.text
+										|Name prize 
+										= t
+										=";"

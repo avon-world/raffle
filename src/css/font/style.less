@@ -1,0 +1,59 @@
+@import "variables";
+
+@font-face {
+  font-family: 'RaffleAvon';
+  src:  url('@{icomoon-font-path}/RaffleAvon.eot?f4ffs45');
+  src:  url('@{icomoon-font-path}/RaffleAvon.eot?f4ffs45#iefix') format('embedded-opentype'),
+    url('@{icomoon-font-path}/RaffleAvon.ttf?f4ffs45') format('truetype'),
+    url('@{icomoon-font-path}/RaffleAvon.woff?f4ffs45') format('woff'),
+    url('@{icomoon-font-path}/RaffleAvon.svg?f4ffs45#RaffleAvon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="rf-"], [class*=" rf-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'RaffleAvon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.rf-raffle {
+  &:before {
+    content: @rf-raffle; 
+  }
+}
+.rf-image {
+  &:before {
+    content: @rf-image; 
+  }
+}
+.rf-add {
+  &:before {
+    content: @rf-add; 
+  }
+}
+.rf-remove {
+  &:before {
+    content: @rf-remove; 
+  }
+}
+.rf-clear {
+  &:before {
+    content: @rf-clear; 
+  }
+}
+.rf-check {
+  &:before {
+    content: @rf-check; 
+  }
+}
+

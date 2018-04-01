@@ -27,6 +27,9 @@ window.debuger = true;
 			pause = 250,
 			speed = 50,
 			setDownUpVal = function(type){
+				if($input[0].disabled){
+					return;
+				}
 				var virt = parseFloat($input.val()) ? parseFloat($input.val()) : 0;
 				val = virt;
 				switch(type){
@@ -53,9 +56,9 @@ window.debuger = true;
 				}
 				$input.val(val).trigger('input');
 			};
-		$(".up, .down", $this).css({
+		/*$(".up, .down", $this).css({
 			cursor: 'pointer'
-		});
+		});*/
 		$input.on("input change", function(e){
 			val = parseFloat($input.val()) ? parseFloat($input.val()) : 0;
 		});
@@ -88,11 +91,70 @@ window.debuger = true;
 		$(document).on('mouseup', function(e){
 			clearInterval(ani);
 			clearTimeout(updown);
+		}).on("mouseleave", ".up, .down", function(e){
+			clearInterval(ani);
+			clearTimeout(updown);
 		});
 	});
 	var arr = [],
 		interval = 0,
+		rafdef = 0,
+		rafloop = 70,
+		loop = 0,
+		raffle = 0,
+		raffleing = false,
 		$block = $('#loto'),
+		$btnraffle = $(".rf-raffle"),
+		loopRaffle = function(){
+			var r, t, n;
+			clearTimeout(loop);
+			$("span[data-number]", $block).removeClass('pre-active');
+			if(!$btnraffle.hasClass('active'))
+				$btnraffle.addClass('active');
+			++raffle;
+			if(raffle < rafloop){
+				arr.shuffle();
+				r = arr.length-1;
+				t = Math.round((Math.random() * r + r)- r);
+				n = arr[t];
+				$("span[data-number='"+n+"']", $block).addClass('pre-active');
+				loop = setTimeout(loopRaffle, 60);
+			}else{
+				raffle = 0;
+				r = arr.length-1;
+				t = Math.round((Math.random() * r + r)- r);
+				n = arr[t];
+				$("span[data-number="+n+"]", $block).addClass('active');
+				// Перемещение приза к номеру
+				arr.splice(t, 1);
+				if(arr.length){
+					if(arr.length == 1)
+						raffle = rafloop;
+					loop = setTimeout(loopRaffle, 3000);
+				}else{
+					stopRaffle();
+				}
+			}
+			
+		},
+		stopRaffle = function(){
+			[].forEach.call($("button, input"), function(el){
+				if($(el).attr('id') != 'btnclear')
+					el.removeAttribute('disabled');
+			});
+			$(".inputnumber").removeClass('disabled');
+			$btnraffle.removeClass('active');
+			$("#btnadd")[0].removeAttribute("disabled");
+			raffleing = false;
+			raffle = 0;
+			
+			var $childs = $("#prizes").children(),
+				len = $childs.length;
+			if(len)
+				$("#btnclear")[0].removeAttribute("disabled");
+			else
+				$("#btnclear").attr("disabled", "disabled");
+		},
 		log = function(){
 			if(window.debuger){
 				console.log.apply(console, arguments);
@@ -103,29 +165,41 @@ window.debuger = true;
 				$(window).trigger('resize');
 			}, 5);
 		},
-		arrShufle = function(){
-			arr.shuffle();
-		},
-		startShufle = function(){
-			interval = setInterval(arrShufle, 100);
-		},
-		stopShufle = function(){
-			clearInterval(interval);
-		},
 		build = function(val){
-			stopShufle();
 			$block.empty();
 			arr = [];
 			ret = parseInt(val);
+			rafdef = ret;
 			for(var i = 0; i<ret; ++i){
 				var k = i+1,
-					$span = $('<span></span>').attr('data-number', k);
+					$span = $(document.createElement("span")).attr('data-number', k);
 				arr.push(k);
-				$block.append($span);
+				$block.append($span.append(document.createElement("span")));
 			}
 			winResize();
-			startShufle();
+		},
+		getDateFormat = function(){
+			var month = [
+					'января', 'февраля', 'марта', 'апреля',
+					'мая', 'июня', 'июля', 'августа',
+					'сентября', 'октября', 'ноября', 'декабря'
+				],
+				jDate = new Date();
+			return ' от ' + jDate.getDate() + month[jDate.getMonth()] + ' ' + jDate.getFullYear()+' г.';
 		};
+	$btnraffle.on('click', function(e){
+		e.preventDefault();
+		if(!raffleing && arr.length){
+			rafdef = arr.length;
+			raffleing = true;
+			raffle = 0;
+			$(".inputnumber").addClass('disabled');
+			$("input[type=number], #btnadd").attr('disabled',"disabled");
+			loopRaffle();
+			$(this).addClass("active");
+		}
+		return !1;
+	});
 	$("input[type='number']").on("blur", function(e){
 		var $this = $(this),
 			id = $this.attr('id'),
@@ -146,11 +220,35 @@ window.debuger = true;
 			build(val);
 		}
 	});
-	$("#btnresult").on("click", function(){
-		stopShufle();
-		if(arr.length){
-			
-		}
+	$("input[type='number']").trigger('input');
+	$(".date").attr({
+		'data-date': getDateFormat()
 	});
-	build(1);
+	if(typeof MutationObserver == 'function'){
+		var $prz = $("#prizes")[0],
+			$btc = $("#btnclear")[0],
+			config = {
+				childList: true,
+				characterData: true,
+				subtree: true,
+				characterDataOldValue: true
+			},
+			callback = function(mutationsList) {
+				var $childs = $($prz).children(),
+					len = $childs.length;
+				if(len){
+					if($btc.disabled)
+						$btc.removeAttribute("disabled");
+				}else{
+					if(!$btc.disabled)
+						$($btc).attr("disabled", "disabled");
+				}
+				if(raffleing){
+					$($btc).attr("disabled", "disabled");
+				}
+			};
+		var observer = new MutationObserver(callback);
+		observer.observe($prz, config);
+		//$($prz).text("GO").empty();
+	}
 })(jQuery);

@@ -119,6 +119,14 @@ module.exports = function(grunt){
 					],
 					dest: 'docs/assets/js/',
 				},
+				fonts: {
+					expand: true,
+					cwd: 'src/fonts',
+					src: [
+						'**.*'
+					],
+					dest: 'docs/assets/fonts/',
+				},
 				forested: {
 					expand: true,
 					cwd: 'bower_components/jquery.forestedglass/dist',
