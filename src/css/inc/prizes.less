@@ -49,16 +49,17 @@ li.prize {
 	}
 	&[data-number] {
 		&:before {
-			content: attr(data-number);
+			content: "?";
 			font-weight: bold;
 			font-size: 30px;
 			text-align: center;
 			color: #fff;
-			background-color: #ff002f;
+			background-color: #05ad02;
 			justify-content: center;
 			z-index: 1;
 			box-shadow: 0 0 0px 1px #ccc;
 			position: relative;
+			transition: all .3s ease;
 		}
 		&:after {
 			color: #fff;
@@ -68,12 +69,23 @@ li.prize {
 			font-weight: normal;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
-			content: "\e905";
+			content: " ";
 			position: absolute;
 			top: 5px;
 			left: 5px;
 			display: block;
 			z-index: 5;
+		}
+	}
+	&.active {
+		&[data-number] {
+			&:before {
+				content: attr(data-number);
+				background-color: #ff002f;
+			}
+			&:after {
+				content: "\e905";
+			}
 		}
 	}
 	@media print {

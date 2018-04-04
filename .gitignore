@@ -5,5 +5,8 @@ node_modules/**/*
 bower_components/**/*
 test/**/*
 tests/**/*
+src/bin/*.*
 package-lock.json
 !**/.gitignore
+!src/bin/*.svg
+!src/bin/*.zip

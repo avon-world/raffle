@@ -104,7 +104,11 @@ window.debuger = true;
 		raffle = 0,
 		raffleing = false,
 		$block = $('#loto'),
-		$btnraffle = $(".rf-raffle"),
+		$prizes = $('#prizes'),
+		$result = $('#result'),
+		$btnraffle = $("button.rf-raffle"),
+		$btnclear = $("#btnclear"),
+		$btnadd = $("#btnadd"),
 		loopRaffle = function(){
 			var r, t, n;
 			clearTimeout(loop);
@@ -127,6 +131,7 @@ window.debuger = true;
 				$("span[data-number="+n+"]", $block).addClass('active');
 				// Перемещение приза к номеру
 				arr.splice(t, 1);
+				getPrize(n);
 				if(arr.length){
 					if(arr.length == 1)
 						raffle = rafloop;
@@ -148,7 +153,7 @@ window.debuger = true;
 			raffleing = false;
 			raffle = 0;
 			
-			var $childs = $("#prizes").children(),
+			var $childs = $prizes.children(),
 				len = $childs.length;
 			if(len)
 				$("#btnclear")[0].removeAttribute("disabled");
@@ -186,7 +191,86 @@ window.debuger = true;
 				],
 				jDate = new Date();
 			return ' от ' + jDate.getDate() + month[jDate.getMonth()] + ' ' + jDate.getFullYear()+' г.';
+		},
+		getPrize = function(nn){
+			var childs = $prizes.children(),
+				el, pzpt,
+				pos = {},
+				win = {};
+			if(childs.length){
+				el = childs.first();
+				pzpt = el.parent();
+				el.addClass('active').attr({
+					'data-number': nn
+				});
+				pos = {
+					top: el.offset().top,
+					left: el.offset().left,
+					width: el.width(),
+					height: el.height()
+				};
+				win = {
+					left: $result.offset().left,
+					width: $result.width(),
+				};
+				setTimeout(function(){
+					el.css({
+						position: 'absolute',
+						'z-index': 1000,
+						top: el.offset().top,
+						left: el.offset().left,
+						width: el.width(),
+						height: el.height()
+					}).parent().css({
+						paddingTop: el.height()
+					});
+					$('body').prepend(el);
+					el.animate(win, 1000, function(){
+						el.animate({
+							top: $result.offset().top + $result.height()
+						}, 500, function(){
+							$result.append(el.removeAttr("style"));
+							pzpt.animate({
+								"padding" : 0
+							}, 500, function(){
+								pzpt.removeAttr("style");
+							});
+						});
+					});
+				}, 1000);
+			}
 		};
+		
+		
+		
+	if(typeof MutationObserver == 'function'){
+		var $prz = $("#prizes")[0],
+			$btc = $("#btnclear")[0],
+			config = {
+				childList: true,
+				characterData: true,
+				subtree: true,
+				characterDataOldValue: true
+			},
+			callback = function(mutationsList) {
+				var $childs = $($prz).children(),
+					len = $childs.length;
+				if(len){
+					if($btc.disabled)
+						$btc.removeAttribute("disabled");
+				}else{
+					if(!$btc.disabled)
+						$($btc).attr("disabled", "disabled");
+				}
+				if(raffleing){
+					$($btc).attr("disabled", "disabled");
+				}
+			};
+		var observer = new MutationObserver(callback);
+		observer.observe($prz, config);
+		//$($prz).text("GO").empty();
+	}
+	
 	$btnraffle.on('click', function(e){
 		e.preventDefault();
 		if(!raffleing && arr.length){
@@ -224,31 +308,59 @@ window.debuger = true;
 	$(".date").attr({
 		'data-date': getDateFormat()
 	});
-	if(typeof MutationObserver == 'function'){
-		var $prz = $("#prizes")[0],
-			$btc = $("#btnclear")[0],
-			config = {
-				childList: true,
-				characterData: true,
-				subtree: true,
-				characterDataOldValue: true
-			},
-			callback = function(mutationsList) {
-				var $childs = $($prz).children(),
-					len = $childs.length;
-				if(len){
-					if($btc.disabled)
-						$btc.removeAttribute("disabled");
-				}else{
-					if(!$btc.disabled)
-						$($btc).attr("disabled", "disabled");
-				}
-				if(raffleing){
-					$($btc).attr("disabled", "disabled");
-				}
+	$btnclear.on('click', function(e){
+		e.preventDefault();
+		$prizes.empty();
+		return !1;
+	});
+	$btnadd.on('click', function(e){
+		e.preventDefault();
+		var childs = $prizes.children(),
+			el, pzpt,
+			pos = {},
+			win = {};
+		if(childs.length){
+			el = childs.first();
+			pzpt = el.parent();
+			el.addClass('active').attr({
+				'data-number': 50
+			});
+			pos = {
+				top: el.offset().top,
+				left: el.offset().left,
+				width: el.width(),
+				height: el.height()
 			};
-		var observer = new MutationObserver(callback);
-		observer.observe($prz, config);
-		//$($prz).text("GO").empty();
-	}
+			win = {
+				left: $result.offset().left,
+				width: $result.width(),
+			};
+			setTimeout(function(){
+				el.css({
+					position: 'absolute',
+					'z-index': 1000,
+					top: el.offset().top,
+					left: el.offset().left,
+					width: el.width(),
+					height: el.height()
+				}).parent().css({
+					paddingTop: el.height()
+				});
+				$('body').prepend(el);
+				el.animate(win, 1000, function(){
+					el.animate({
+						top: $result.offset().top + $result.height()
+					}, 500, function(){
+						$result.append(el.removeAttr("style"));
+						pzpt.animate({
+							"padding" : 0
+						}, 500, function(){
+							pzpt.removeAttr("style");
+						});
+					});
+				});
+			}, 1000);
+		}
+		return !1;
+	});
 })(jQuery);

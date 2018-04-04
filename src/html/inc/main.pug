@@ -17,42 +17,32 @@ main.main
 									.inputnumber-spin.down
 										|−
 									input#sizenum(type="number" min="1" max="100" value="1")
-							.columns-settings-label
-								strong
-									|Разыгрываемый приз/призы
-								.columns-settings-label-prizes
-									ul#prizes
-										li.prize(data-number="1")
+							
+					.columns-loto
+						.loto
+							#loto
+							.loto-raffle
+								button.btn.rf-raffle#btnraffle(title="Розыграть")
+					.full
+						.columns-settings-label
+							h2.text-center.block-center
+								|Разыгрываемые призы
+							.columns-settings-label-prizes
+								- var n = 1;
+								ul#prizes
+									while n < 51
+										- var t = n++
+										li.prize(data-number= t)
 											span.bg
 											span.text
-												|Name prize;
-										li.prize(data-number="2")
-											span.bg
-											span.text
-												|Name prize;
-										li.prize(data-number="3")
-											span.bg
-											span.text
-												|Name prize;
-								.columns-settings-label-buttons
-									button.btn.rf-add#btnadd(title="Добавить приз")
-									button.btn.rf-clear#btnclear(title="Очистить")
-						.columns-loto
-							.loto
-								#loto
-								.loto-raffle
-									button.btn.rf-raffle#btnraffle(title="Розыграть")
+												|Name prize 
+												= t
+												=";"
+							.columns-settings-label-buttons
+								button.btn.rf-add#btnadd(title="Добавить приз")
+								button.btn.rf-clear#btnclear(title="Очистить")
 					.columns.resultraffle
 						h2.text-center.block-center.full.date
 							|Результат розыгрыша лотереи
 						.columns-result.full
-							- var n = 1;
 							ul#result
-							while n < 51
-								- var t = n++
-								li.prize(data-number= t)
-									span.bg
-									span.text
-										|Name prize 
-										= t
-										=";"
