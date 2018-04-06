@@ -1,0 +1,25 @@
+.hidden#artic-template
+	.addprize
+		h2.text-center
+			|Добавить приз
+		.addprize-wrapper
+			label.input-title
+				span
+					|Название
+				.input-wrapper
+					input.input-text.addprize-name(type="text" value="" autofocus)
+			label.input-title
+				span
+					|Фото
+				.input-wrapper
+					.input-file(data-file="Файл не выбран")
+						input.addprize-photo(type="file" accept="image/jpeg,image/png")
+			label.input-title.text-center
+				span
+					|Предпросмотр
+				.addprize-flex
+					.addprize-flex.preview
+						.preview-image
+					.addprize-flex.button
+						button.addprize-button
+							|Добавить

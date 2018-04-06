@@ -7,10 +7,9 @@ main.main
 				.row
 					.columns
 						.columns-settings
-							label.columns-settings-label
+							label.columns-settings-label.columns-settings-label-number
 								strong
-									|Количество разигрываемых номеров
-								br
+									|Количество разыгрываемых номеров
 								.inputnumber
 									.inputnumber-spin.up
 										|+
@@ -23,24 +22,27 @@ main.main
 							#loto
 							.loto-raffle
 								button.btn.rf-raffle#btnraffle(title="Розыграть")
-					.full
-						.columns-settings-label
-							h2.text-center.block-center
-								|Разыгрываемые призы
-							.columns-settings-label-prizes
-								- var n = 1;
-								ul#prizes
-									while n < 51
-										- var t = n++
-										li.prize(data-number= t)
-											span.bg
-											span.text
-												|Name prize 
-												= t
-												=";"
-							.columns-settings-label-buttons
-								button.btn.rf-add#btnadd(title="Добавить приз")
-								button.btn.rf-clear#btnclear(title="Очистить")
+					.columns-settings-label.print-hidden
+						h2.text-center.block-center
+							|Разыгрываемые призы
+						
+						include artictemplate
+						.columns-settings-label-prizes
+							- var n = 1;
+							ul#prizes
+							
+							//-
+								while n < 51
+									- var t = n++
+									li.prize(data-number= t)
+										span.bg
+										span.text
+											|Name prize 
+											= t
+											=";"
+						.columns-settings-label-buttons
+							button.btn.rf-add#btnadd(title="Добавить приз")
+							button.btn.rf-clear#btnclear(title="Очистить")
 					.columns.resultraffle
 						h2.text-center.block-center.full.date
 							|Результат розыгрыша лотереи

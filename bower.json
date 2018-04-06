@@ -14,12 +14,15 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "jquery": "^3.3.1",
-    "normalize-css": "normalize.css#^7.0.0",
-    "yepnope": "^2.0.0",
-    "jquery.forestedglass": "https://github.com/ProjectSoft-STUDIONIONS/jquery.forestedglass.git#^1.0.1",
-    "arcticModal": "https://github.com/vjik/arcticModal.git",
-    "Jcrop": "https://github.com/tapmodo/Jcrop.git#^2.0.4"
-  }
+  "devDependencies": {
+    "jquery": ">=3.3.1",
+    "normalize-css": "normalize.css#>=7.0.0",
+    "yepnope": ">=2.0.0",
+    "jquery.forestedglass": "https://github.com/ProjectSoft-STUDIONIONS/jquery.forestedglass.git",
+    "arcticModal": "https://studionions@bitbucket.org/projectsoft-studionions/arcticmodal.git",
+    "exif-js": "https://github.com/jseidelin/exif-js.git",
+    "Croppie": "https://github.com/Foliotek/Croppie.git",
+    "fancybox": "https://github.com/fancyapps/fancybox.git"
+  },
+  "dependencies": {}
 }

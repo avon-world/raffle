@@ -47,32 +47,27 @@ module.exports = function(grunt){
 					files : {
 						'test/css/main.css' : [
 							'src/css/main.less'
+						],
+						'test/css/normalize.css' : [
+							'bower_components/normalize-css/normalize.css',
+						],
+						'test/css/croppie.css' : [
+							'bower_components/Croppie/croppie.css',
+						],
+						'test/css/arcticmodal.css' : [
+							'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.css',
+						],
+						'test/css/theme.css' : [
+							'bower_components/arcticModal/arcticmodal/themes/dark.css',
+						],
+						'test/css/fancybox.css' : [
+							'bower_components/fancybox/dist/jquery.fancybox.css',
 						]
 					},
 					options : {
 						compress: false,
 						ieCompat: false,
 						banner: '<%= meta.banners %>',
-						plugins: [
-							new (require('less-plugin-clean-css'))({
-								level: {
-									1: {
-										specialComments: 0
-									}
-								}
-							})
-						],
-					}
-				},
-				normalize: {
-					files : {
-						'test/css/normalize.css' : [
-							'bower_components/normalize-css/normalize.css',
-						]
-					},
-					options : {
-						compress: false,
-						ieCompat: false,
 						plugins: [
 							new (require('less-plugin-clean-css'))({
 								level: {
@@ -94,6 +89,10 @@ module.exports = function(grunt){
 					files: {
 						'tests/css/main.css' : ['test/css/main.css'],
 						'tests/css/normalize.css' : ['test/css/normalize.css'],
+						'tests/css/croppie.css' : ['test/css/croppie.css'],
+						'tests/css/arcticmodal.css' : ['test/css/arcticmodal.css'],
+						'tests/css/theme.css' : ['test/css/theme.css'],
+						'tests/css/fancybox.css' : ['test/css/fancybox.css'],
 					}
 				},
 			},
@@ -108,6 +107,24 @@ module.exports = function(grunt){
 					],
 					dest: 'docs/assets/css/main.css',
 				},
+				appcss: {
+					src: [
+						'tests/css/fancybox.css',
+						'tests/css/arcticmodal.css',
+						'tests/css/theme.css',
+						'tests/css/croppie.css'
+					],
+					dest: 'docs/assets/css/appcss.css',
+				},
+				appjs: {
+					src: [
+						'bower_components/fancybox/dist/jquery.fancybox.min.js',
+						'bower_components/exif-js/exif.js',
+						'bower_components/Croppie/croppie.min.js',
+						'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.js'
+					],
+					dest: 'docs/assets/js/appjs.js'
+				}
 			},
 			copy: {
 				main: {
@@ -135,7 +152,8 @@ module.exports = function(grunt){
 						'jquery.forestedglass.min.js.map'
 					],
 					dest: 'docs/assets/js/',
-				}
+				},
+				
 			},
 			pug: {
 				files: {

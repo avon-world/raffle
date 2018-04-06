@@ -1,4 +1,12 @@
 @media print {
+	* {
+		color: #000 !important;
+	}
+	.print {
+		&-hidden {
+			display: none !important;
+		}
+	}
 	a {
 		color: #000 !important;
 		text-decoration: none !important;
@@ -43,7 +51,7 @@
 			}
 		}
 	}
-	ul#result {
+	ul {
 		li.prize {
 			width: 100%;
 			flex: 1 0 100%;
@@ -69,7 +77,8 @@
 				min-height: unset;
 				max-height: unset;
 			}
-			&:after {
+			&:after,
+			.btn {
 				display: none;
 			}
 		}
