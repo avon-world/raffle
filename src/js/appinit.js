@@ -12,9 +12,10 @@ Array.prototype.shuffle = function( b ){
 	Object.assign(this, newArr);
 	return this;
 };
-window.debuger = true;
+
 ;(function($){
 	window.debuger = (typeof window.debuger == "boolean") ? window.debuger : false;
+	
 	$('.inputnumber').each(function(){
 		var $this = $(this),
 			$up = $(".up", $this),
@@ -582,7 +583,7 @@ window.debuger = true;
 				enableOrientation: true,
 				mouseWheelZoom: 'ctrl',
 				enableExif: true
-			});
+			}),
 			clear = function(){
 				$parent.attr({
 					'data-file': "Файл не выбран"

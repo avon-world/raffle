@@ -22,7 +22,8 @@
     "arcticModal": "https://studionions@bitbucket.org/projectsoft-studionions/arcticmodal.git",
     "exif-js": "https://github.com/jseidelin/exif-js.git",
     "Croppie": "https://github.com/Foliotek/Croppie.git",
-    "fancybox": "https://github.com/fancyapps/fancybox.git"
+    "fancybox": "https://github.com/fancyapps/fancybox.git",
+	"jquery.cookie": "https://github.com/carhartl/jquery-cookie.git"
   },
   "dependencies": {}
 }

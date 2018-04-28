@@ -1,31 +1,31 @@
 main.main
 	.container
 		.full.main-wrapper(data-plugin="forestedglass" data-target="main.main" data-blur="15")
-			h1.page-title.text-center
-				|Розыгрыш лотереи
 			#lotereya
 				.row
+					h1.page-title.text-center(data-i18n="H1_TITLE")
+						|&nbsp;
 					.columns
 						.columns-settings
 							label.columns-settings-label.columns-settings-label-number
-								strong
-									|Количество разыгрываемых номеров
+								strong(data-i18n="NUMBER_TITLE")
+									|&nbsp;
 								.inputnumber
-									.inputnumber-spin.up
-										|+
-									.inputnumber-spin.down
-										|−
-									input#sizenum(type="number" min="1" max="100" value="1")
+									.inputnumber-spin-wrapper
+										.inputnumber-spin.up(tabindex="-1")
+											|+
+										.inputnumber-spin.down(tabindex="-1")
+											|−
+									input#sizenum(type="number" min="1" max="100" value="1" tabindex="-1")
 							
 					.columns-loto
 						.loto
 							#loto
 							.loto-raffle
-								button.btn.rf-raffle#btnraffle(title="Розыграть")
+								button.btn.rf-raffle#btnraffle(data-i18n-title="BTN_RAFFLE_TITLE" tabindex="-1")
 					.columns-settings-label.print-hidden
-						h2.text-center.block-center
-							|Разыгрываемые призы
-						
+						h2.text-center.block-center(data-i18n="PLAYED_TITLE")
+							|&nbsp;
 						include artictemplate
 						.columns-settings-label-prizes
 							- var n = 1;
@@ -41,10 +41,10 @@ main.main
 											= t
 											=";"
 						.columns-settings-label-buttons
-							button.btn.rf-add#btnadd(title="Добавить приз")
-							button.btn.rf-clear#btnclear(title="Очистить")
+							button.btn.rf-add#btnadd(data-i18n-title="BTN_ADD_TITLE" tabindex="-1")
+							button.btn.rf-clear#btnclear(data-i18n-title="BTN_CLEAR_TITLE" tabindex="-1")
 					.columns.resultraffle
-						h2.text-center.block-center.full.date
-							|Результат розыгрыша лотереи
+						h2.text-center.block-center.full.date(data-i18n="PLAYED_RESULT")
+							|&nbsp;
 						.columns-result.full
 							ul#result
