@@ -17,6 +17,7 @@ li.prize {
 	background-color: #fff;
 	box-shadow: 0px 0px 2px #ccc;
 	position: relative;
+	user-select: none;
 	span {
 		display: flex;
 		justify-content: flex-start;
@@ -42,15 +43,15 @@ li.prize {
 			&-remove, 
 			&-edit {
 				position: absolute;
-				right: 5px;
+				right: 10px;
 				margin-right: 0;
 			}
 			&-clear, 
 			&-remove {
-				bottom: 5px;
+				bottom: 10px;
 			}
 			&-edit {
-				display: none;
+				top: 10px;
 			}
 		}
 	}

@@ -61,7 +61,7 @@ module.exports = function(grunt){
 							'bower_components/arcticModal/arcticmodal/themes/dark.css',
 						],
 						'test/css/fancybox.css' : [
-							'bower_components/fancybox/dist/jquery.fancybox.css',
+							'src/css/jquery.fancybox.css',
 						]
 					},
 					options : {
@@ -118,6 +118,7 @@ module.exports = function(grunt){
 				},
 				appjs: {
 					src: [
+						'bower_components/jquery.cookie/jquery.cookie.js',
 						'bower_components/fancybox/dist/jquery.fancybox.min.js',
 						'bower_components/exif-js/exif.js',
 						'bower_components/Croppie/croppie.min.js',

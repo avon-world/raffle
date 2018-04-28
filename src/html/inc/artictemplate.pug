@@ -1,25 +1,27 @@
 .hidden#artic-template
 	.addprize
-		h2.text-center
-			|Добавить приз
+		h2.text-center(data-i18n="MODAL_TITLE")
+			|&nbsp;
 		.addprize-wrapper
 			label.input-title
-				span
-					|Название
+				span(data-i18n="NAME_LABEL")
+					|&nbsp
 				.input-wrapper
 					input.input-text.addprize-name(type="text" value="" autofocus)
 			label.input-title
-				span
-					|Фото
+				span(data-i18n="PHOTO_LABEL")
+					|&nbsp;
 				.input-wrapper
-					.input-file(data-file="Файл не выбран")
-						input.addprize-photo(type="file" accept="image/jpeg,image/png")
+					.input-file(data-file="" data-i18n-file="NOT_SELECT_FILE" data-i18n-file-title="SELECT_FILE")
+						input.addprize-photo(type="file" accept="image/jpeg,image/png" tabindex="-1")
 			label.input-title.text-center
-				span
-					|Предпросмотр
+				span(data-i18n="PREVIEW_LABEL")
+					|&nbsp;
 				.addprize-flex
 					.addprize-flex.preview
 						.preview-image
 					.addprize-flex.button
-						button.addprize-button
-							|Добавить
+						button.addprize-button(data-i18n="ADD_LABEL" tabindex="-1")
+							|&nbsp;
+						button.cancel-button(data-i18n="BTN_CANCEL" tabindex="-1")
+							|&nbsp;

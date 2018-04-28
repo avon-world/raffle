@@ -9,4 +9,66 @@
 			text-decoration: none;
 		}
 	}
+	.full {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+	.pul {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		span {
+			&.git {
+				display: block;
+				margin-left: 30px;
+				> a {
+					&:before {
+						display: block;
+						width: 20px;
+						height: 20px;
+						border-radius: 50%;
+						overflow: hidden;
+						background-color: #fff;
+						content: " ";
+						background-image: url('assets/images/git.svg');
+						background-position: 50% 50%;
+						background-repeat: no-repeat;
+						background-size: contain;
+					}
+				}
+			}
+		}
+	}
+	#langs {
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		margin-right: -10px;
+		> li {
+			list-style: none;
+			padding-left: 10px;
+			padding-right: 10px;
+			> a {
+				color: #000;
+				&,
+				&:hover {
+					text-decoration: none;
+				}
+				&,
+				&:focus {
+					outline-color: unset;
+					outline-style: unset;
+					outline-width: 0;
+				}
+				&.active,
+				&:hover {
+					color: #fff;
+				}
+			}
+		}
+	}
 }

@@ -1,0 +1,34 @@
+.arcticmodal {
+	&-container {
+		.reload {
+			&-modal {
+				padding-bottom: 40px;
+				h2 {
+					margin-bottom:40px;
+					padding-left:20px;
+					padding-right: 20px;
+				}
+				button {
+					-webkit-appearance: none;
+					border: unset !important;
+					min-width: 112px;
+					&,
+					&:focus {
+						border: unset;
+						padding-left: 20px;
+						padding-right: 20px;
+						height: 48px;
+						color: #fff;
+						background-color: #ff38a0;
+						transition: all .3s ease;
+						font-size: 14px;
+						outline: unset !important;
+					}
+					&:hover {
+						box-shadow: 0px 0px 4px 1px #fff;
+					}
+				}
+			}
+		}
+	}
+}

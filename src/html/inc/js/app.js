@@ -1,4 +1,4 @@
-yepnope('https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js', undefined, function() {
+/*yepnope('https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js', undefined, function() {
 	if(typeof WebFont == 'object') {
 		WebFont.load({
 			google: {
@@ -8,10 +8,10 @@ yepnope('https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js', undefi
 			}
 		});
 	}
-});
+});*/
 var time = (new Date()).getTime();
 yepnope('assets/js/jquery.min.js?'+time, undefined, function() {
-	yepnope('assets/js/appinit.js?'+time, undefined, function() {
+	//yepnope('assets/js/appinit.js?'+time, undefined, function() {
 		yepnope('assets/js/jquery.forestedglass.min.js?'+time, undefined, function() {
 			yepnope('assets/css/appcss.css?'+time, undefined, function() {
 				yepnope('assets/js/appjs.js?'+time, undefined, function() {
@@ -21,5 +21,5 @@ yepnope('assets/js/jquery.min.js?'+time, undefined, function() {
 				})
 			})
 		})
-	})
+	//})
 })
