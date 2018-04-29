@@ -9,6 +9,22 @@
 		margin-top: 0px;
 	}
 }
+ul.ui-sortable {
+	li {
+		&.prize {
+			transition: box-shadow .3s ease-in-out;
+			span {
+				&.handle {
+					cursor: n-resize;
+				}
+			}
+		}
+		&.ui-sortable-helper {
+			box-shadow: 0 0 18px rgba(0, 0, 0, 0.24);
+			z-index:1000;
+		}
+	}
+}
 li.prize {
 	display: flex;
 	flex-direction: row;
@@ -21,6 +37,14 @@ li.prize {
 	span {
 		display: flex;
 		justify-content: flex-start;
+		&.handle {
+			position: absolute;
+			width: 100px;
+			height:  100px;
+			top: 0px;
+			left: 0px;
+			z-index: 3;
+		}
 		&.bg {
 			background-position: 50% 50%;
 			background-repeat: no-repeat;
@@ -119,9 +143,29 @@ li.prize {
 	}
 }
 .raffleing {
+	ul.ui-sortable, ul {
+		li {
+			&.prize {
+				span {
+					&.handle {
+						display: none !important;
+					}
+				}
+			}
+		}
+	}
 	li.prize {
 		span {
 			&.btn {
+				display: none;
+			}
+		}
+	}
+}
+#result {
+	li.prize {
+		span {
+			&.handle {
 				display: none;
 			}
 		}

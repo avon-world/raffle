@@ -14,8 +14,20 @@ body {
 img {
 	max-width: 100%;
 	height: auto;
+	user-select: none;
+}
+label {
+	span,
+	strong,
+	em,
+	p,
+	b,
+	i {
+		user-select: none;
+	}
 }
 a {
+	user-select: none;
 	&, &:focus {
 		outline-width: unset;
 		outline-color: unset;
@@ -27,6 +39,7 @@ a {
 }
 p {
 	margin-bottom: 12px;
+	user-select: none;
 	&:last-child {
 		margin-bottom: 0px;
 	}
@@ -34,10 +47,12 @@ p {
 ul, ol {
 	margin-top: 0px;
 	margin-bottom: 12px;
+	user-select: none;
 }
 h1, h2, h3, h4, h5, h6 {
 	font-family: 'PT Sans Caption', sans-serif;
 	font-weight: 400;
+	user-select: none;
 }
 /*input[type=number]{
 	&::-webkit-inner-spin-button,

@@ -1,7 +1,7 @@
 module.exports = function(grunt){
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
-	var pugMinify = false,
+	var pugMinify = true,
 		optionsPug = {
 			pretty: !pugMinify ? '\t' : '',
 			separator:  !pugMinify ? '\n' : ''
@@ -11,6 +11,35 @@ module.exports = function(grunt){
 			meta: {
 				banners: '/*! <%= pkg.name %> v<%= pkg.version %> | <%= pkg.license %> License | <%= pkg.homepage %> */'
 			},
+			requirejs: {
+				ui: {
+					options: {
+						baseUrl: __dirname+"/bower_components/jquery-ui/ui/widgets/",//"./",
+						paths: {
+							jquery: __dirname+'/bower_components/jquery/dist/jquery'
+						},
+						preserveLicenseComments: false,
+						optimize: "uglify",
+						findNestedDependencies: true,
+						skipModuleInsertion: true,
+						exclude: [ "jquery" ],
+						include: [ 
+									"../disable-selection.js",
+									"sortable.js",
+								],
+						out: "test/js/jquery.vendors.js",
+						done: function(done, output) {
+							grunt.log.writeln(output.magenta);
+							grunt.log.writeln("jQueryUI Custom Build ".cyan + "done!\n");
+							done();
+						},
+						error: function(done, err) {
+							grunt.log.warn(err);
+							done();
+						}
+					}
+				}
+			},
 			uglify: {
 				compile: {
 					options: {
@@ -19,9 +48,7 @@ module.exports = function(grunt){
 						mangle: {
 							reserved: ['jQuery']
 						},
-						sourceMap: {
-							includeSources: true
-						},
+						sourceMap: false, 
 					},
 					files: [
 						{
@@ -33,6 +60,16 @@ module.exports = function(grunt){
 							dest: 'docs/assets/js/',
 							filter: 'isFile'
 							//'docs/assets/js/main.js': 'src/js/main.js'
+						},
+						{
+							expand: true,
+							flatten : true,
+							src: [
+								'test/js/tooltip.js'
+							],
+							dest: 'tests/js/',
+							filter: 'isFile'
+							//tooltip.js
 						}
 					]
 				}
@@ -118,11 +155,13 @@ module.exports = function(grunt){
 				},
 				appjs: {
 					src: [
+						'test/js/jquery.vendors.js',
 						'bower_components/jquery.cookie/jquery.cookie.js',
 						'bower_components/fancybox/dist/jquery.fancybox.min.js',
 						'bower_components/exif-js/exif.js',
 						'bower_components/Croppie/croppie.min.js',
-						'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.js'
+						'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.js',
+						'test/js/tooltip.js'
 					],
 					dest: 'docs/assets/js/appjs.js'
 				}
@@ -203,10 +242,11 @@ module.exports = function(grunt){
 						'imagemin',
 						'less',
 						'autoprefixer',
-						'concat',
 						'jshint',
 						'copy',
 						'uglify',
+						'requirejs',
+						'concat',
 						'pug',
 						'notify:done'
 					]

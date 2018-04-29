@@ -117,6 +117,12 @@ Array.prototype.shuffle = function( b ){
 	*/
 	var i18n = {
 			'en-us': {
+				'ALERT_ERROR': '<span class="error">ERROR!!!</span>',
+				'ERROR_MIN_NUMBER': 'First remove the prize.',
+				'ALERT_SUCCESS': '<span class="success">Well Done Lottery Drawing!!!</span>',
+				'SUCCESS_LOTERY': 'Congratulations!<br>All prizes are played.',
+				'NOT_PRIZES': 'There are no prizes for the draw!',
+				'PRIZES_NUM_ERROR': 'There are more prizes to draw than participating rooms!',
 				'PAGE_TITLE': 'Lottery Generator',
 				'H1_TITLE': 'LOTTERY DRAWING',
 				'PLAYED_TITLE': 'Prizes to be played',
@@ -157,6 +163,12 @@ Array.prototype.shuffle = function( b ){
 				'month11': 'December'
 			},
 			'ru-ru': {
+				'ALERT_ERROR': '<span class="error">ОШИБКА!!!</span>',
+				'ERROR_MIN_NUMBER': 'Сначало удалите приз.',
+				'ALERT_SUCCESS': '<span class="success">Лотерея Разыграна!!!</span>',
+				'SUCCESS_LOTERY': 'Поздравляем!<br>Все призы разыграны.',
+				'NOT_PRIZES': 'Нет призов для розыгрыша!',
+				'PRIZES_NUM_ERROR': 'Призов для розыгрыша больше, чем участвующих номеров!',
 				'PAGE_TITLE': 'Генератор розыгрыша лотереи',
 				'H1_TITLE': 'РОЗЫГРЫШ ЛОТЕРЕИ',
 				'PLAYED_TITLE': 'Разыгрываемые призы',
@@ -224,7 +236,7 @@ Array.prototype.shuffle = function( b ){
 							var $this = $(this),
 								TEXT = i18n[_lang][$this.data('i18n')];
 							if(TEXT){
-								$this.text(TEXT);
+								$this.html(TEXT);
 							}
 						}
 					});
@@ -233,9 +245,14 @@ Array.prototype.shuffle = function( b ){
 							_lang = value;
 							$.cookie('lang', _lang, { expires: 360, path: '/' });
 							var $this = $(this),
-								TEXT = i18n[_lang][$this.data('i18n-title')];
-							if(TEXT){
-								$this[0].title = TEXT;
+								TEXT = i18n[_lang][$this.data('i18n-title')],
+								text = $("<div></div>").html(TEXT).text();
+							
+							if(text){
+								$this.attr({
+									'data-tooltips-title': text,
+									'data-original-title': text
+								}).removeAttr('title');
 							}
 						}
 					});
@@ -245,18 +262,27 @@ Array.prototype.shuffle = function( b ){
 							$.cookie('lang', _lang, { expires: 360, path: '/' });
 							var $this = $(this),
 								TEXT = i18n[_lang][$this.data('i18n-file')],
-								BTNTEXT = i18n[_lang][$this.data('i18n-file-title')];
+								BTNTEXT = i18n[_lang][$this.data('i18n-file-title')],
+								text = $("<div></div>").html(TEXT).text(),
+								btntext = $("<div></div>").html(BTNTEXT).text();
 							if(TEXT){
 								$this.attr({
-									'data-file': TEXT,
-									'data-file-title': BTNTEXT
+									'data-file': text,
+									'data-file-title': btntext
 								});
 							}
 						}
 					});
 					$("#langs > li > a[data-lang]").removeClass('active');
 					$("#langs > li > a[data-lang="+_lang+"]").addClass('active');
-					
+					$('[data-tooltips-title]').tooltip(
+						{
+							title: function(){
+								return $(this).attr('data-tooltips-title');
+							},
+							container: 'body'
+						}
+					).removeAttr('title');
 					self.date();
 				}
 			},
@@ -365,13 +391,8 @@ Array.prototype.shuffle = function( b ){
 		self.lang = _lang;
 		self
 			.init()
-			.date()
-			.build(self.sizenum.val());
-		$(document).on('click', 'button.cancel-button', function(e){
-			e.preventDefault();
-			$.arcticmodal('close');
-			return !1;
-		});
+			.build(self.sizenum.val())
+			.date();
 		return self;
 	};
 	$.extend(Raffle.prototype, {
@@ -388,14 +409,20 @@ Array.prototype.shuffle = function( b ){
 				$.arcticmodal('close');
 				return !1;
 			});
+			$(document).on('click', 'button.cancel-button', function(e){
+				e.preventDefault();
+				$.arcticmodal('close');
+				return !1;
+			});
 			$(self.sizenum).on("input change", function(e){
 				var $this = $(this),
 					val = parseInt($this.val()),
 					childs = self.prizes.children();
-				val = val ? val : 0;
+				val = val ? val : 1;
+				$this.val(val);
 				if(val < childs.length){
 					$this.val(childs.length);
-					//alert(i18n[self.lang].ALERT_DEL_PRIZE);
+					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].ALERT_DEL_PRIZE);
 					return !1;
 				}
 				self.build(val);
@@ -412,10 +439,29 @@ Array.prototype.shuffle = function( b ){
 			});
 			self.btnraffle.on('click', function(e){
 				e.preventDefault();
+				self.prizes.sortable("option", "disabled", true);
 				self.start();
 				return !1;
 			});
+			self.prizes.sortable({
+				axis: 'y',
+				stop: function(e, u){
+					self.prizes.children().each(function(){
+						$(this).removeAttr('style');
+					});
+				},
+				cursor: 'n-resize',
+				handle: '.handle'
+			});//.sortable( "refresh" );
 			$('.git a').unbind('click');
+			
+			$('[data-tooltips-title]').tooltip(
+				{
+					title: function(){
+						return $(this).attr('data-tooltips-title');
+					}
+				}
+			);
 			if(typeof MutationObserver == 'function'){
 				var $prz = self.prizes,
 					$btc = self.btnclear,
@@ -445,12 +491,13 @@ Array.prototype.shuffle = function( b ){
 						}else{
 							if(!self.raffleing){
 								self.btnraffle.removeAttr('disabled');
+							}else{
+								self.btnraffle.tooltip('destroy');
 							}
 						}
 						
 						if(self.raffleing){
 							$($btc).attr("disabled", "disabled");
-							self.btnraffle.attr({disabled: 'disabled'});
 						}
 						
 						
@@ -480,6 +527,30 @@ Array.prototype.shuffle = function( b ){
 				
 			}
 			return self;
+		},
+		alert: function(title, content){
+			var c = $(
+				'<div class="box-modal reload-modal text-center">' + 
+					'<div class="reload-modal-wrapper">' + 
+						'<h2 class="text-center">' + title + '</h2>' + 
+						'<p class="text-center">' + content + '</p>' + 
+					'</div>' + 
+					'<button class="ok-button">OK</button>' + 
+				'</div>'
+				);
+				//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
+			$.arcticmodal({
+				content: c,
+				closeOnOverlayClick: false,
+				beforeOpen: function(d, f){
+					self.artmodal = f;
+					
+				},
+				afterClose: function(){
+					self.artmodal = null;
+					self.artedit = null;
+				}
+			});
 		},
 		loopraffle: function() {
 			//_loop;
@@ -525,13 +596,14 @@ Array.prototype.shuffle = function( b ){
 			var self = this,
 				childs = self.prizes.children(),
 				len = childs.length;
+			self.btnraffle.tooltip('destroy');
 			if(!self.raffleing){
 				if(len==0){
-					alert("Нет призов для розыгрыша!");
+					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_PRIZES);
 					return !1;
 				}
 				if(len > self.array.length){
-					alert("Призов для розыгрыша больше, чем учавствующих номеров!");
+					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].PRIZES_NUM_ERROR);
 					return !1;
 				}
 			}
@@ -603,26 +675,10 @@ Array.prototype.shuffle = function( b ){
 			);
 			$('.columns-result.full').prepend(reload);
 			$('body').addClass('end');
+			self.prizes.sortable("option", "disabled", false);
 			setTimeout(function(){
-				
-				var c = $('<div class="box-modal reload-modal text-center">' + 
-							'<h2 class="text-center">' + i18n[self.lang].END_RAFFLE + '</h2>' + 
-							'<button class="ok-button">OK</button>' + 
-							'</div>');
-				//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
-				$.arcticmodal({
-					content: c,
-					closeOnOverlayClick: false,
-					beforeOpen: function(d, f){
-						self.artmodal = f;
-						
-					},
-					afterClose: function(){
-						self.artmodal = null;
-						self.artedit = null;
-					}
-				});
-			}, 3500);
+				self.alert(i18n[self.lang].ALERT_SUCCESS, i18n[self.lang].SUCCESS_LOTERY);
+			}, 500);
 			return self;
 		},
 		prize: function(val){
@@ -658,6 +714,7 @@ Array.prototype.shuffle = function( b ){
 					}).parent().css({
 						paddingTop: el.height()
 					});
+					$('.handle', el).removeClass('ui-sortable-handle');
 					$('body').prepend(el);
 					el.animate(win, 1000, function(){
 						el.animate({
@@ -723,6 +780,7 @@ Array.prototype.shuffle = function( b ){
 			self.result.empty();
 			$(self.sizenum).val(1);
 			self.build(self.sizenum.val());
+			self.lang = _lang;
 			return self;
 		},
 		setFocus: function(){
@@ -862,7 +920,7 @@ Array.prototype.shuffle = function( b ){
 			}).then(function(){
 				
 			});
-			c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
+			//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
 			$submit.on("click", function(e){
 				e.preventDefault();
 				addHandle();
@@ -990,6 +1048,8 @@ Array.prototype.shuffle = function( b ){
 					$close.on("click", function(e){
 						e.preventDefault();
 						var parent = $(this).data('parent');
+						$([$close, $edit]).tooltip('destroy');
+						
 						parent.remove();
 						return !1;
 					});
@@ -1024,8 +1084,9 @@ Array.prototype.shuffle = function( b ){
 							]);
 						}
 					});
-					$li.append([$bg, $text, $close, $edit]);
+					$li.append([$('<span class="handle"></span>'), $bg, $text, $close, $edit]);
 					self.prizes.append($li);
+					self.prizes.sortable( 'refresh' );
 					$submit.unbind('click');
 					$.arcticmodal('close');
 				};
@@ -1056,7 +1117,7 @@ Array.prototype.shuffle = function( b ){
 				setTimeout(self.setFocus.bind(self), 50);
 			});
 			$crp.croppie('bind', 'assets/images/nophoto.jpg');
-			c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
+			//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
 			$submit.on("click", function(e){
 				e.preventDefault();
 				addHandle();
@@ -1144,12 +1205,21 @@ Array.prototype.shuffle = function( b ){
 				afterClose: function(){
 					self.artmodal = null;
 					self.artedit = null;
+					$('[title]').tooltip(
+						{
+							title: function(){
+								return $(this).attr('data-tooltips-title');
+							},
+							container: 'body'
+						}
+					);
 				}
 			});
 			return self;
 		},
 		clear: function(){
 			var self = this;
+			$('[data-original-title]', self.prizes).tooltip('destroy');
 			self.prizes.empty();
 			return self;
 		},
