@@ -438,6 +438,7 @@ Array.prototype.shuffle = function( b ){
 				return !1;
 			});
 			self.btnraffle.on('click', function(e){
+				$('.tooltip').remove();
 				e.preventDefault();
 				self.prizes.sortable("option", "disabled", true);
 				self.start();
@@ -798,6 +799,7 @@ Array.prototype.shuffle = function( b ){
 			return self;
 		},
 		edit: function(el){
+			$('.tooltip').remove();
 			var self = this,
 				element = el;
 			if(el.length != 1)
@@ -981,6 +983,7 @@ Array.prototype.shuffle = function( b ){
 			return self;
 		},
 		add: function(){
+			$('.tooltip').remove();
 			var self = this,
 				childs = self.prizes.children(),
 				len = childs.length;
@@ -1218,6 +1221,7 @@ Array.prototype.shuffle = function( b ){
 			return self;
 		},
 		clear: function(){
+			$('.tooltip').remove();
 			var self = this;
 			$('[data-original-title]', self.prizes).tooltip('destroy');
 			self.prizes.empty();
@@ -1275,10 +1279,10 @@ Array.prototype.shuffle = function( b ){
 		
 		setTimeout(function(){
 			$('body').addClass('load ');
-			setInterval(function(){
+			setTimeout(function(){
 				$(window).trigger('resize');
-			},200);
-		}, 1000);
+			},2000);
+		}, 3000);
 	});
 	
 }( window, document, window.jQuery || jQuery ));
