@@ -381,11 +381,13 @@ Array.prototype.shuffle = function( b ){
 		self.element = element;
 		
 		self.artmodal = null;
+		self.alertmodal = null;
 		self.artedit = null;
 		
 		self.countloop = 70;
 		self.raffle = 0;
 		self.raffleing = false;
+		self.rafflestart = false;
 		self.rafdef = 0;
 		
 		self.lang = _lang;
@@ -406,7 +408,12 @@ Array.prototype.shuffle = function( b ){
 			});
 			$(document).on('click', '.ok-button', function(e){
 				e.preventDefault();
-				$.arcticmodal('close');
+				
+				if(self.alertmodal){
+					self.alertmodal.arcticmodal('close');
+				}else{
+					$.arcticmodal('close');
+				}
 				return !1;
 			});
 			$(document).on('click', 'button.cancel-button', function(e){
@@ -422,7 +429,7 @@ Array.prototype.shuffle = function( b ){
 				$this.val(val);
 				if(val < childs.length){
 					$this.val(childs.length);
-					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].ALERT_DEL_PRIZE);
+					self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].ALERT_DEL_PRIZE]);
 					return !1;
 				}
 				self.build(val);
@@ -461,6 +468,14 @@ Array.prototype.shuffle = function( b ){
 					title: function(){
 						return $(this).attr('data-tooltips-title');
 					}
+				}
+			);
+			$('.help > a').tooltip(
+				{
+					html: true,
+					placement: 'bottom',
+					container: '.help',
+					trigger: 'click'
 				}
 			);
 			if(typeof MutationObserver == 'function'){
@@ -527,31 +542,93 @@ Array.prototype.shuffle = function( b ){
 				self.result.text("GO").empty();
 				
 			}
+			$(window).data({
+				selfrafle: self
+			});
+			$(window).on('keydown', self.keycommand);
+			/*$(window).on('keydown', function(e){
+				if(self.alertmodal) {
+					
+				}
+			});*/
 			return self;
+		},
+		keycommand: function(e){
+			var self = $(window).data('selfrafle');
+			if(self){
+				if(self.alertmodal){
+					if(e.keyCode != 13){
+						return;
+					}else{
+						self.alertmodal.arcticmodal("close");
+						e.preventDefault();
+						return !1;
+					}
+				}
+				if(self.raffleing || self.rafflestart){
+					return;
+				}
+			}else{
+				return;
+			}
+			if(e.altKey && e.ctrlKey && e.keyCode != 18 && e.keyCode != 17){
+				var val = self.sizenum.val();
+				switch(e.keyCode){
+					// Ctrl + Alt + A (65)
+					case 65:
+						self.btnadd.trigger('click');
+						break;
+					// Ctrl + Alt + Down
+					case 40:
+						//if(!self.sizenum.is(':focus')){
+							--val;
+							self.sizenum.val(val).trigger('change');
+						//}
+						break;
+					// Ctrl + Alt + Up
+					case 38:
+						if(!self.sizenum.is(':focus')){
+							++val;
+							self.sizenum.val(val).trigger('change');
+						}
+						break;
+				}
+			}
 		},
 		alert: function(title, content){
 			var c = $(
-				'<div class="box-modal reload-modal text-center">' + 
+				'<div class="box-modal reload-modal text-center alert-modal">' + 
 					'<div class="reload-modal-wrapper">' + 
 						'<h2 class="text-center">' + title + '</h2>' + 
 						'<p class="text-center">' + content + '</p>' + 
 					'</div>' + 
 					'<button class="ok-button">OK</button>' + 
 				'</div>'
-				);
+				),
+				self = this;
 				//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
 			$.arcticmodal({
 				content: c,
 				closeOnOverlayClick: false,
+				closeOnEsc: false,
 				beforeOpen: function(d, f){
-					self.artmodal = f;
-					
+					self.sizenum.blur();
+					self.alertmodal = f;
+					if(self.artmodal){
+						$('input, button', self.artmodal).attr({
+							disabled: 'disabled'
+						});
+					}
 				},
-				afterClose: function(){
-					self.artmodal = null;
-					self.artedit = null;
+				afterClose: function(d, f){
+					self.alertmodal = null;
+					if(self.artmodal){
+						$('input, button', self.artmodal).removeAttr('disabled');
+						self.setFocus();
+					}
 				}
 			});
+			return self;
 		},
 		loopraffle: function() {
 			//_loop;
@@ -564,7 +641,6 @@ Array.prototype.shuffle = function( b ){
 			if(!self.btnraffle.hasClass('active'))
 				self.btnraffle.addClass('active');
 			++self.raffle;
-			self.log(len);
 			if(len){
 				if(self.raffle < self.countloop){
 					self.array.shuffle();
@@ -582,11 +658,10 @@ Array.prototype.shuffle = function( b ){
 					// Перемещение приза к номеру
 					self.array.splice(t, 1);
 					self.prize(n);
-					self.log('self.array.length', self.array.length);
 					if(self.array.length){
 						if(self.array.length == 1)
 							self.raffle = self.countloop;
-						_loop = setTimeout(self.loopraffle.bind(self), 3500);
+						_loop = setTimeout(self.loopraffle.bind(self), 4500);
 					}
 				}
 			}else{
@@ -600,21 +675,19 @@ Array.prototype.shuffle = function( b ){
 			self.btnraffle.tooltip('destroy');
 			if(!self.raffleing){
 				if(len==0){
-					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_PRIZES);
+					self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_PRIZES]);
 					return !1;
 				}
 				if(len > self.array.length){
-					self.alert(i18n[self.lang].ALERT_ERROR, i18n[self.lang].PRIZES_NUM_ERROR);
+					self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].PRIZES_NUM_ERROR]);
 					return !1;
 				}
 			}
-			self.log('bool',(!self.raffleing && self.array.length));
-			self.log('bool 1', !self.raffleing);
-			self.log(self.array.length);
+			
 			if(!self.raffleing && self.array.length){
 				$('body').addClass('raffleing');
 				self.rafdef = self.array.length;
-				self.raffleing = true;
+				self.raffleing = self.rafflestart = true;
 				self.raffle = 0;
 				$(".inputnumber").addClass('disabled');
 				$("input[type=number], #btnadd").attr('disabled',"disabled");
@@ -637,6 +710,7 @@ Array.prototype.shuffle = function( b ){
 			$(".inputnumber").removeClass('disabled');
 			self.btnadd.removeAttr("disabled");
 			self.raffleing = false;
+			self.rafflestart = true;
 			self.raffle = 0;
 			var $childs = self.prizes.children(),
 				len = $childs.length;
@@ -678,7 +752,7 @@ Array.prototype.shuffle = function( b ){
 			$('body').addClass('end');
 			self.prizes.sortable("option", "disabled", false);
 			setTimeout(function(){
-				self.alert(i18n[self.lang].ALERT_SUCCESS, i18n[self.lang].SUCCESS_LOTERY);
+				self.alert.apply(self, [i18n[self.lang].ALERT_SUCCESS, i18n[self.lang].SUCCESS_LOTERY]);
 			}, 500);
 			return self;
 		},
@@ -720,7 +794,7 @@ Array.prototype.shuffle = function( b ){
 					el.animate(win, 1000, function(){
 						el.animate({
 							top: self.result.offset().top + self.result.height()
-						}, 500, function(){
+						}, 1500, function(){
 							// self.result.append(el.removeAttr("style"));
 							if(!self.result.children().length){
 								ch = true;
@@ -782,6 +856,8 @@ Array.prototype.shuffle = function( b ){
 			$(self.sizenum).val(1);
 			self.build(self.sizenum.val());
 			self.lang = _lang;
+			self.rafflestart = false;
+			self.raffleing = false;
 			return self;
 		},
 		setFocus: function(){
@@ -817,8 +893,37 @@ Array.prototype.shuffle = function( b ){
 				name = el.data('name'),
 				file = el.data('file'),
 				addHandle = function(){
-					
-					$.arcticmodal('close');
+					if(self.alertmodal){
+						return !1;
+					}
+					var val = $.trim($name.val()),
+						data = $temp.data(),
+						$bg = $('.bg', el),
+						$text = $('.text', el);
+					if(val==""){
+						self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_NAME]);
+						return !1;
+					}
+					$file.unbind('input change');
+					el.data({
+						bg: data.original,
+						crop: data.crop,
+						name: val,
+						file: data.file,
+						files: $file[0]
+					});
+					$bg.css({
+						backgroundImage: "url(" + data.crop + ")"
+					}).data({
+						'parent': el
+					});
+					if(data.original){
+						$bg.addClass('pointer');
+					}else{
+						$bg.removeClass('pointer');
+					}
+					$text.text(val);
+					self.artmodal.arcticmodal('close');
 				};
 			$file = $(el.data('files')).on('input change', function(){
 				var $this = $(this),
@@ -924,15 +1029,19 @@ Array.prototype.shuffle = function( b ){
 			});
 			//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
 			$submit.on("click", function(e){
-				e.preventDefault();
-				addHandle();
-				return !1;
-			}).text(i18n[self.lang].BTN_SUBMIT);
-			$name.on('keydown', function(e){
-				if(e.keyCode == 13 && !e.ctrlKey && !e.altKey){
+				if(!self.alertmodal){
 					e.preventDefault();
 					addHandle();
 					return !1;
+				}
+			}).text(i18n[self.lang].BTN_SUBMIT);
+			$name.on('keydown', function(e){
+				if(e.keyCode == 13 && !e.ctrlKey && !e.altKey){
+					if(!self.alertmodal){
+						e.preventDefault();
+						addHandle();
+						return !1;
+					}
 				}
 			}).focus();
 			$.arcticmodal({
@@ -948,34 +1057,7 @@ Array.prototype.shuffle = function( b ){
 					});
 				},
 				afterClose: function(){
-					var val = $.trim($name.val()),
-						data = $temp.data(),
-						$bg = $('.bg', el),
-						$text = $('.text', el);
-					if(val==""){
-						alert(i18n[self.lang].NOT_NAME);
-						setTimeout(self.setFocus.bind(self), 50);
-						return !1;
-					}
-					$file.unbind('input change');
-					el.data({
-						bg: data.original,
-						crop: data.crop,
-						name: val,
-						file: data.file,
-						files: $file[0]
-					});
-					$bg.css({
-						backgroundImage: "url(" + data.crop + ")"
-					}).data({
-						'parent': el
-					});
-					if(data.original){
-						$bg.addClass('pointer');
-					}else{
-						$bg.removeClass('pointer');
-					}
-					$text.text(val);
+					
 					self.artmodal = null;
 					self.artedit = null;
 				}
@@ -988,7 +1070,10 @@ Array.prototype.shuffle = function( b ){
 				childs = self.prizes.children(),
 				len = childs.length;
 			if(self.array.length <= len){
-				alert(i18n[self.lang].NOT_ADD);
+				self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_ADD]);
+				return self;
+			}
+			if(self.artmodal){
 				return self;
 			}
 			var $temp = $("#artic-template .addprize").clone(),
@@ -1000,9 +1085,10 @@ Array.prototype.shuffle = function( b ){
 				addHandle = function(){
 					var val = $.trim($name.val());
 					if(val==""){
-						alert(i18n[self.lang].NOT_NAME);
-						setTimeout(self.setFocus.bind(self), 50);
-						return !1;
+						if(!self.alertmodal){
+							self.alert.apply(self, [i18n[self.lang].ALERT_ERROR, i18n[self.lang].NOT_NAME]);
+						}
+						return;
 					}
 					$temp.data({
 						'name': val,
@@ -1091,7 +1177,7 @@ Array.prototype.shuffle = function( b ){
 					self.prizes.append($li);
 					self.prizes.sortable( 'refresh' );
 					$submit.unbind('click');
-					$.arcticmodal('close');
+					self.artmodal.arcticmodal('close');
 				};
 			c.append($temp);
 			$crp.croppie({
@@ -1122,15 +1208,20 @@ Array.prototype.shuffle = function( b ){
 			$crp.croppie('bind', 'assets/images/nophoto.jpg');
 			//c.prepend('<div class="box-modal_close arcticmodal-close rf-remove"></div>');
 			$submit.on("click", function(e){
-				e.preventDefault();
-				addHandle();
-				return !1;
-			});
-			$name.on('keydown', function(e){
-				if(e.keyCode == 13 && !e.ctrlKey && !e.altKey){
+				if(!self.alertmodal){
 					e.preventDefault();
 					addHandle();
 					return !1;
+				}
+			});
+			$name.on('keydown', function(e){
+				if(e.keyCode == 13 && !e.ctrlKey && !e.altKey){
+					if(!self.alertmodal){
+						e.preventDefault();
+						addHandle();
+						return !1;
+					}
+					return;
 				}
 			}).focus();
 			$file.on('input change', function(e){

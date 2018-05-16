@@ -22,7 +22,7 @@
 		span {
 			&.git {
 				display: block;
-				margin-left: 30px;
+				margin-left: 10px;
 				> a {
 					&:before {
 						display: block;
@@ -39,6 +39,55 @@
 					}
 				}
 			}
+			&.help {
+				display: block;
+				margin-left: 20px;
+				> a {
+					display: flex;
+					width: 20px;
+					height: 20px;
+					border-radius: 50%;
+					overflow: hidden;
+					background-color: #000;
+					color: #fff;
+					justify-content: center;
+					align-items: center;
+					font-weight: bold;
+					transition: all .4s ease;
+					&, &:hover, &:focus {
+						text-decoration: none;
+					}
+					&:hover, &[aria-describedby] {
+						background-color: #fff;
+						color: #000;
+					}
+				}
+				.tooltip {
+					&-inner {
+						max-width: 320px;
+						dl {
+							font-size: 14px;
+							text-align: left;
+							display: flex;
+							flex-wrap: nowrap;
+							margin: 0px;
+							dt {
+								margin: 0;
+								padding: 0;
+								font-weight: bold;
+								width: 125px;
+								text-align: right;
+							}
+							dd {
+								margin: 0;
+								padding: 0;
+								padding-left: 5px;
+							}
+						}
+					}
+				}
+			}
+
 		}
 	}
 	#langs {
