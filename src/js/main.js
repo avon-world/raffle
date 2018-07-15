@@ -279,6 +279,7 @@ Array.prototype.shuffle = function( b ){
 					$("#langs > li > a[data-lang="+_lang+"]").addClass('active');
 					$('[data-tooltips-title]').tooltip(
 						{
+							trigger: 'hover',
 							title: function(){
 								return $(this).attr('data-tooltips-title');
 							},
@@ -1355,6 +1356,7 @@ Array.prototype.shuffle = function( b ){
 					self.artedit = null;
 					$('[title]').tooltip(
 						{
+							trigger: 'hover',
 							title: function(){
 								return $(this).attr('data-tooltips-title');
 							},
