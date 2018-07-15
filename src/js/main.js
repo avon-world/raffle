@@ -134,6 +134,7 @@ Array.prototype.shuffle = function( b ){
 				'BTN_DELETE_TITLE': 'Delete a prize',
 				'BTN_CLEAR_TITLE': 'Delete all prizes',
 				'NOT_SELECT_FILE': 'No file selected',
+				'BTN_PRIZERAFLE_TITLE': 'Stitch prizes',
 				'BTN_SUBMIT': 'Apply',
 				'BTN_CANCEL': 'Cancel',
 				'NAME_LABEL': 'Name',
@@ -146,7 +147,7 @@ Array.prototype.shuffle = function( b ){
 				'NOT_NAME': 'You did not enter the prize name',
 				'WON_NUMBER': 'Won the number',
 				'ALERT_DEL_PRIZE': 'First remove the prize',
-				'END_RAFFLE': 'Все призы разыграны!',
+				'END_RAFFLE': 'All prizes are played!',
 				'NEW_RAFFLE': 'New Lottery drawing',
 				'PRINT': 'Print result',
 				'month0': 'January',
@@ -179,6 +180,7 @@ Array.prototype.shuffle = function( b ){
 				'BTN_EDIT_TITLE': 'Редактировать приз',
 				'BTN_DELETE_TITLE': 'Удалить приз',
 				'BTN_CLEAR_TITLE': 'Удалить все призы',
+				'BTN_PRIZERAFLE_TITLE': 'Перемешать призы',
 				'NOT_SELECT_FILE': 'Файл не выбран',
 				'BTN_SUBMIT': 'Применить',
 				'BTN_CANCEL': 'Отмена',
@@ -339,7 +341,15 @@ Array.prototype.shuffle = function( b ){
 			},
 			btnraffle: {
 				get: function(){
-					return $('button.rf-raffle', this.element);
+					return $('#btnraffle', this.element);
+				},
+				set: function(value){
+					throw new Error('Нельзя установить данное значение!');
+				}
+			},
+			btnstitch: {
+				get: function(){
+					return $('#btnstitch', this.element);
 				},
 				set: function(value){
 					throw new Error('Нельзя установить данное значение!');
@@ -444,6 +454,32 @@ Array.prototype.shuffle = function( b ){
 				self.clear();
 				return !1;
 			});
+			$(self.btnstitch).on('click', function(e){
+				e.preventDefault();
+				$(self.btnstitch).addClass('active');
+				var len = 50,
+					loop = 0,
+					stitch = function(){
+						clearTimeout(interval);
+						if(!self.raffleing){
+							var childs = self.prizes.children(),
+								arr = [].shuffle.call(childs);
+							arr.each(function(){
+								self.prizes.append(this);
+							});
+							if(loop < len){
+								++loop;
+								interval = setTimeout(stitch, 25);
+							}else{
+								$(self.btnstitch).removeClass('active');
+							}
+						} else {
+							$(self.btnstitch).removeClass('active');
+						}
+					},
+					interval = setTimeout(stitch, 25);
+				return !1;
+			});
 			self.btnraffle.on('click', function(e){
 				$('.tooltip').remove();
 				e.preventDefault();
@@ -465,6 +501,7 @@ Array.prototype.shuffle = function( b ){
 			
 			$('[data-tooltips-title]').tooltip(
 				{
+					trigger: 'hover',
 					title: function(){
 						return $(this).attr('data-tooltips-title');
 					}
@@ -494,12 +531,16 @@ Array.prototype.shuffle = function( b ){
 						var $childs = self.prizes.children(),
 							len = $childs.length;
 						if(len){
-							if(self.btnclear[0].disabled)
+							if(self.btnclear[0].disabled){
 								self.btnclear.removeAttr("disabled");
+								self.btnstitch.removeAttr("disabled");
+							}
 							
 						}else{
-							if(!self.btnclear[0].disabled)
+							if(!self.btnclear[0].disabled){
 								self.btnclear.attr("disabled", "disabled");
+								self.btnstitch.attr("disabled", "disabled");
+							}
 						}
 						
 						if(!self.prizes.children().length){
@@ -514,6 +555,7 @@ Array.prototype.shuffle = function( b ){
 						
 						if(self.raffleing){
 							$($btc).attr("disabled", "disabled");
+							self.btnstitch.attr("disabled", "disabled");
 						}
 						
 						
@@ -546,11 +588,7 @@ Array.prototype.shuffle = function( b ){
 				selfrafle: self
 			});
 			$(window).on('keydown', self.keycommand);
-			/*$(window).on('keydown', function(e){
-				if(self.alertmodal) {
-					
-				}
-			});*/
+			
 			return self;
 		},
 		keycommand: function(e){
@@ -704,7 +742,8 @@ Array.prototype.shuffle = function( b ){
 			clearTimeout(_loop);
 			self.btnraffle.removeClass('active').slideUp(300);
 			[].forEach.call($("button, input"), function(el){
-				if($(el).attr('id') != 'btnclear')
+				var id = $(el).attr('id');
+				if(id != 'btnclear' || id != 'btnstitch')
 					el.removeAttribute('disabled');
 			});
 			$(".inputnumber").removeClass('disabled');
@@ -716,8 +755,10 @@ Array.prototype.shuffle = function( b ){
 				len = $childs.length;
 			if(len){
 				self.btnclear.removeAttr("disabled");
+				self.btnstitch.removeAttr("disabled");
 			}else{
 				self.btnclear.attr("disabled", "disabled");
+				self.btnstitch.attr("disabled", "disabled");
 			}
 			var reload = $('<div></div>', {
 				class: 'reload text-center print-hidden'
@@ -889,6 +930,7 @@ Array.prototype.shuffle = function( b ){
 				h2 = $('.addprize > h2', $temp),
 				c = $('<div class="box-modal" />'),
 				originalUri = el.data('bg'),
+				cd = el.data('cropData'),
 				cropUri = el.data('crop'),
 				name = el.data('name'),
 				file = el.data('file'),
@@ -907,6 +949,7 @@ Array.prototype.shuffle = function( b ){
 					$file.unbind('input change');
 					el.data({
 						bg: data.original,
+						cropData: cd,
 						crop: data.crop,
 						name: val,
 						file: data.file,
@@ -972,7 +1015,7 @@ Array.prototype.shuffle = function( b ){
 					$crp.croppie('result', {
 						type: 'canvas',
 						size: 'viewport'
-					}).then(function (resp) {
+					}).then(function (resp, cropData) {
 						$temp.data({
 							'crop': resp
 						});
@@ -994,6 +1037,7 @@ Array.prototype.shuffle = function( b ){
 			$temp.data({
 				original: originalUri,
 				crop: cropUri,
+				cropData: cd,
 				name: name,
 				file: file
 			});
@@ -1012,18 +1056,26 @@ Array.prototype.shuffle = function( b ){
 				enableExif: true
 			});
 			$crp.on('update.croppie', function(ev, cropData) {
+				cd = cropData;
+				$temp.data({
+					'cropData': cropData
+				});
 				$crp.croppie('result', {
 					type: 'canvas',
 					size: 'viewport'
 				}).then(function (resp) {
 					$temp.data({
+						'cropData': cd,
 						'crop': resp
 					});
 				});
 				setTimeout(self.setFocus.bind(self), 50);
 			});
 			$crp.croppie('bind', {
-				url: originalUri ? originalUri : 'assets/images/nophoto.jpg'
+				url: originalUri ? originalUri : 'assets/images/nophoto.jpg',
+				points: cd.points,
+				orientation: cd.orientation,
+				zoom: cd.zoom
 			}).then(function(){
 				
 			});
@@ -1103,6 +1155,7 @@ Array.prototype.shuffle = function( b ){
 						}).data({
 							bg: data.original,
 							crop: data.crop,
+							cropData: data.cropData,
 							name: data.name,
 							file: data.file,
 							files: $file[0]
@@ -1200,6 +1253,7 @@ Array.prototype.shuffle = function( b ){
 					size: 'viewport'
 				}).then(function (resp) {
 					$temp.data({
+						'cropData':cropData,
 						'crop': resp
 					});
 				});
