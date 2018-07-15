@@ -65,7 +65,7 @@ module.exports = function(grunt){
 							expand: true,
 							flatten : true,
 							src: [
-								'test/js/tooltip.js'
+								'src/tooltip/tooltip.js'
 							],
 							dest: 'tests/js/',
 							filter: 'isFile'
@@ -161,7 +161,7 @@ module.exports = function(grunt){
 						'bower_components/exif-js/exif.js',
 						'bower_components/Croppie/croppie.min.js',
 						'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.js',
-						'test/js/tooltip.js'
+						'tests/js/tooltip.js'
 					],
 					dest: 'docs/assets/js/appjs.js'
 				}
