@@ -1,11 +1,14 @@
 desktop.*
 **/.*
 bin/**/*
+cache/**/*
+docs/**/*
 node_modules/**/*
 bower_components/**/*
 test/**/*
 tests/**/*
 src/bin/*.*
+installer/**/*
 package-lock.json
 !**/.gitignore
 !src/bin/*.svg

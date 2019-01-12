@@ -11,6 +11,45 @@ module.exports = function(grunt){
 			meta: {
 				banners: '/*! <%= pkg.name %> v<%= pkg.version %> | <%= pkg.license %> License | <%= pkg.homepage %> */'
 			},
+			json_generator: {
+				nwjs: {
+					dest: "docs/package.json",
+					options: {
+						"app_name": "RafflePrizesRelease",
+						"dependencies": {
+							"deck": "latest"
+						},
+						"main": "index.html",
+						"name": "generatorprize",
+						"nodejs": true,
+						"version": "1.6",
+						"webkit": {
+							"plugin": true
+						},
+						"winIco": "favicon.ico",
+						"window": {
+							"exe_icon": "assets/images/icon.png",
+							"frame": true,
+							"height": 400,
+							"icon": "assets/images/icon.png",
+							"id": "generatorprize",
+							"kiosk_emulation": true,
+							"mac_icon": "assets/images/icon.png",
+							"min_height": 400,
+							"min_width": 800,
+							"position": "center",
+							"resizable": true,
+							"show_in_taskbar": true,
+							"title": "Генератор Лотереи",
+							"toolbar": true,
+							"visible": true,
+							"visible_on_all_workspaces": true,
+							"width": 800
+						},
+						"zip": true
+					}
+				}
+			},
 			requirejs: {
 				ui: {
 					options: {
@@ -55,6 +94,7 @@ module.exports = function(grunt){
 							expand: true,
 							flatten : true,
 							src: [
+								'test/js/appjs.js',
 								'src/js/*.js'
 							],
 							dest: 'docs/assets/js/',
@@ -119,7 +159,7 @@ module.exports = function(grunt){
 			},
 			autoprefixer:{
 				options: {
-					browsers: ['last 2 versions', 'Android 4', 'ie 8', 'ie 9', 'Firefox >= 27', 'Opera >= 12.0', 'Safari >= 6'],
+					browsers: ['last 2 versions'],
 					cascade: true
 				},
 				css: {
@@ -146,36 +186,29 @@ module.exports = function(grunt){
 				},
 				appcss: {
 					src: [
-						'tests/css/fancybox.css',
+						'bower_components/fancybox/dist/jquery.fancybox.css',
 						'tests/css/arcticmodal.css',
 						'tests/css/theme.css',
-						'tests/css/croppie.css'
+						'bower_components/Croppie/croppie.css'
 					],
 					dest: 'docs/assets/css/appcss.css',
 				},
 				appjs: {
 					src: [
+						'bower_components/jquery/dist/jquery.js',
 						'test/js/jquery.vendors.js',
 						'bower_components/jquery.cookie/jquery.cookie.js',
 						'bower_components/fancybox/dist/jquery.fancybox.min.js',
 						'bower_components/exif-js/exif.js',
 						'bower_components/Croppie/croppie.min.js',
 						'bower_components/arcticModal/arcticmodal/jquery.arcticmodal.js',
+						'bower_components/jquery.forestedglass/dist/jquery.forestedglass.js',
 						'tests/js/tooltip.js'
 					],
-					dest: 'docs/assets/js/appjs.js'
+					dest: 'test/js/appjs.js'
 				}
 			},
 			copy: {
-				main: {
-					expand: true,
-					cwd: 'bower_components/jquery/dist',
-					src: [
-						'jquery.min.js',
-						'jquery.min.map'
-					],
-					dest: 'docs/assets/js/',
-				},
 				fonts: {
 					expand: true,
 					cwd: 'src/fonts',
@@ -184,16 +217,14 @@ module.exports = function(grunt){
 					],
 					dest: 'docs/assets/fonts/',
 				},
-				forested: {
+				icon: {
 					expand: true,
-					cwd: 'bower_components/jquery.forestedglass/dist',
+					cwd: 'src/images',
 					src: [
-						'jquery.forestedglass.min.js',
-						'jquery.forestedglass.min.js.map'
+						'favicon.ico'
 					],
-					dest: 'docs/assets/js/',
+					dest: 'docs',
 				},
-				
 			},
 			pug: {
 				files: {
@@ -226,6 +257,30 @@ module.exports = function(grunt){
 					]
 				}
 			},
+			nwjs: {
+				options: {
+					platforms: ['win'],
+					buildDir: __dirname+'/test',
+					flavor: 'normal',
+					version: '0.35.2',
+					cacheDir: __dirname+'/.cache'
+				},
+				src: [__dirname+'/docs/**/*']
+			},
+			exec: {
+				win32: {
+					cmd: "win32.bat"
+				},
+				win64: {
+					cmd: "win64.bat"
+				},
+				install: {
+					cmd: "install.bat"
+				},
+				test: {
+					cmd: "test.bat"
+				}
+			},
 			delta: {
 				options: {
 					livereload: true,
@@ -239,19 +294,29 @@ module.exports = function(grunt){
 					],
 					tasks: [
 						'notify:watch',
-						'imagemin',
+						'clean',
+						'jshint',
+						'requirejs',
 						'less',
 						'autoprefixer',
-						'jshint',
-						'copy',
-						'uglify',
-						'requirejs',
 						'concat',
+						'imagemin',
+						'uglify',
 						'pug',
+						'json_generator',
+						'copy',
+						'nwjs',
+						'exec',
 						'notify:done'
 					]
 				}
 			},
+			clean: {
+				start: {
+					src: ['test/raffle*','test/raffleprizes','test/generator*', 'docs']
+				}
+			},
+			
 			notify: {
 				watch: {
 					options: {
@@ -273,6 +338,9 @@ module.exports = function(grunt){
 	grunt.initConfig(tasksConfig);
 	
 	grunt.renameTask('watch',		'delta');
-    grunt.registerTask('dev',		[ 'jshint', 'delta']);
+    //grunt.registerTask('dev',		[ 'jshint', 'delta']);
 	grunt.registerTask('default',	tasksConfig.delta.compile.tasks);
+	grunt.registerTask('dev',		['notify:watch', 'jshint', 'clean', 'less', 'autoprefixer',  'concat', 'uglify', 'imagemin', 'pug', 'copy', 'json_generator', 'exec:test', 'notify:done']);
+	grunt.registerTask('node',		['notify:watch', 'jshint', 'clean', 'less', 'autoprefixer', 'concat', 'uglify', 'imagemin', 'pug', 'copy', 'json_generator', 'nwjs', 'exec:win32', 'exec:win64', 'notify:done']);
+	//grunt.registerTask('build',		['clean','nwjs','exec']);
 }

@@ -1,4 +1,106 @@
 window.debuger = true;
+
+var gui = require('nw.gui');
+
+var win = gui.Window.get(),
+	tray,
+	state = true,
+	deffer = 0.0001,
+	playAudio = false,
+	stream = "http://air2.radiorecord.ru:805/rock_320",
+	audioState = "stop";
+	
+//win.setShowInTaskbar(false);
+
+tray = new gui.Tray({ title: 'Генератор розыгрыша лотерей', icon: 'assets/images/icon.png' });
+
+
+var your_menu = new nw.Menu({ type: 'menubar' });
+var submenu = new nw.Menu();
+submenu.append(new nw.MenuItem({ label: 'Item A' }));
+submenu.append(new nw.MenuItem({ label: 'Item B' }));
+
+your_menu.append(new nw.MenuItem({
+  label: 'First Menu',
+  submenu: submenu
+}));
+//nw.Window.get().menu = your_menu;
+
+tray.on('click', function(){
+	if(state){
+		win.hide();
+		win.setShowInTaskbar(false);
+	}else{
+		win.show();
+		win.setShowInTaskbar(true);
+	}
+	state = !state;
+});
+win.on('minimize', function(){
+	this.hide();
+	win.setShowInTaskbar(false);
+	state = false;
+});
+
+Audio.prototype.stopStream = function()
+{
+	//console.log(audioState, this.volume);
+	if(audioState == "play"){
+		var vol = parseFloat(this.volume) - 0.025;
+		if(vol>0.2){
+			this.volume = vol;
+			setTimeout(this.stopStream.bind(this), 100);
+		}else {
+			this.volume = 0;
+			this.valume = 0;
+			this.pause();
+			this.src="data:audio/mpeg;base64,/+MQwAAAAANIAYAAAExBTUUzLjkzVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/jEMAnAAADSAHAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/4xDATgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+			this.currentTime = 0.0;
+			audioState = "stop";
+		}
+	}else{
+		this.volume = 0;
+		this.valume = 0;
+		this.pause();
+		this.src="data:audio/mpeg;base64,/+MQwAAAAANIAYAAAExBTUUzLjkzVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/jEMAnAAADSAHAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/4xDATgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+		this.currentTime = 0.0;
+		audioState = "stop";
+	}
+	deffer = 0.0001;
+	playAudio = false;
+};
+
+Audio.prototype.playStream = function()
+{
+	//console.log(audioState, this.volume);
+	if(audioState == "stop") {
+		if(!this.isPlaying()){
+			var rand = new Date();
+			this.volume = 0;
+			this.src=stream + "?" + rand.getTime();
+			this.play();
+			deffer = 0.0001;
+			setTimeout(this.playStream.bind(this), 100);
+		}else{
+			var vol = parseFloat(this.volume) + deffer;
+			deffer = vol < 0.15 ? deffer * 1.1 : 0.025;
+			if(vol < 0.9){
+				this.volume = vol;
+				setTimeout(this.playStream.bind(this), 100);
+			}else{
+				deffer = 0.0001;
+				audioState = "play";
+				this.volume = 1;
+			}
+		}
+	}
+	playAudio = true;
+};
+
+Audio.prototype.isPlaying = function(){
+	return playAudio;
+};
+
 Array.prototype.shuffle = function( b ){
 	var newArr=[],
 		arr = Object.assign([], this),
@@ -13,15 +115,9 @@ Array.prototype.shuffle = function( b ){
 	Object.assign(this, newArr);
 	return this;
 };
+
 ;(function(window, document, $, undefined){
 	
-	/*
-	 *
-	 * input type number
-	 * Autor: ProjectSoft
-	 * 
-	 * 
-	*/
 	$('.inputnumber').each(function(){
 		var $this = $(this),
 			$up = $(".up", $this),
@@ -109,12 +205,6 @@ Array.prototype.shuffle = function( b ){
 
 ;(function(window, document, $, undefined){
 	
-	/*
-	 * 
-	 * Raffle Plugin
-	 * Autor: ProjectSoft
-	 * 
-	*/
 	var i18n = {
 			'en-us': {
 				'ALERT_ERROR': '<span class="error">ERROR!!!</span>',
@@ -220,6 +310,10 @@ Array.prototype.shuffle = function( b ){
 		return;
 	}
 	
+	var _audio = new Audio();
+	_audio.src = stream;
+	_audio.volume = 0;
+	
 	Raffle = function(element){
 		
 		var self = this;
@@ -231,6 +325,8 @@ Array.prototype.shuffle = function( b ){
 				},
 				set: function(value){
 					_lang = value;
+					tray.title = i18n[_lang].PAGE_TITLE;
+					tray.tooltip = i18n[_lang].PAGE_TITLE + "\n" + "ProjectSoft © 2018";
 					$('[data-i18n]', document).each(function(){
 						if(typeof i18n[value] == 'object'){
 							_lang = value;
@@ -316,6 +412,14 @@ Array.prototype.shuffle = function( b ){
 					}
 				}
 			},
+			audio: {
+				get: function(){
+					return _audio;
+				},
+				set: function(value){
+					throw new Error('Нельзя установить данное значение!');
+				}
+			},
 			block: {
 				get: function(){
 					return $('#loto', this.element);
@@ -367,6 +471,22 @@ Array.prototype.shuffle = function( b ){
 			btnadd: {
 				get: function(){
 					return $('#btnadd', this.element);
+				},
+				set: function(value){
+					throw new Error('Нельзя установить данное значение!');
+				}
+			},
+			btnexport: {
+				get: function(){
+					return $('#btnexport', this.element);
+				},
+				set: function(value){
+					throw new Error('Нельзя установить данное значение!');
+				}
+			},
+			btnimport: {
+				get: function(){
+					return $('#btnimport', this.element);
 				},
 				set: function(value){
 					throw new Error('Нельзя установить данное значение!');
@@ -488,6 +608,8 @@ Array.prototype.shuffle = function( b ){
 				self.start();
 				return !1;
 			});
+			self.btnexport.on('click', self.export.bind(self));
+			self.btnimport.on('click', self.import.bind(self));
 			self.prizes.sortable({
 				axis: 'y',
 				stop: function(e, u){
@@ -631,7 +753,30 @@ Array.prototype.shuffle = function( b ){
 							self.sizenum.val(val).trigger('change');
 						}
 						break;
+					// Ctrl + Alt + E - Export
+					case 69:
+						//self.export();
+						break;
+					// Ctrl + Alt + I - Import
+					case 73:
+						//self.import();
+						break;
+					// Ctrl + Alt + P - Import
+					case 80:
+						
+						break;
 				}
+			}
+			var fscr = false;
+			if(e.keyCode==122){
+				fscr = win.isFullscreen;
+				win.toggleFullscreen();
+				
+			}
+			if(e.keyCode==27){
+				fscr = win.isFullscreen;
+				win.toggleFullscreen();
+				
 			}
 		},
 		alert: function(title, content){
@@ -735,6 +880,7 @@ Array.prototype.shuffle = function( b ){
 				$('.columns-settings-label-buttons').slideUp(500);
 				$(".columns-settings").slideUp(500);
 				self.loopraffle();
+				self.audio.playStream();
 			}
 			return self;
 		},
@@ -795,6 +941,9 @@ Array.prototype.shuffle = function( b ){
 			self.prizes.sortable("option", "disabled", false);
 			setTimeout(function(){
 				self.alert.apply(self, [i18n[self.lang].ALERT_SUCCESS, i18n[self.lang].SUCCESS_LOTERY]);
+				setTimeout(function(){
+					window.ds.audio.stopStream();
+				}, 3000);
 			}, 500);
 			return self;
 		},
@@ -1391,8 +1540,92 @@ Array.prototype.shuffle = function( b ){
 		},
 		log: function(){
 			if(window.debuger){
-				console.log.apply(console, arguments);
+				console.dir.apply(console, arguments);
 			}
+		},
+		import: function(){
+			var self = this,
+				json,
+				time,
+				input = $('<input />', {
+					type: 'file',
+					accept: "application/json"
+				}).css({
+					position: 'fixed',
+					left: -3000
+				}).on('input.raffle change.raffle', function(e){
+					clearTimeout(time);
+					$(window).unbind('focus.raffle');
+					var file = this;
+					if(file.files && file.files[0]){
+						var reader = new FileReader();
+						reader.onload = function (e) {
+							setTimeout(function(){$(file).remove();}, 10);
+							try {
+								json = JSON.parse(e.target.result);
+							} catch (ex) {
+								return;
+							}
+							if(json){
+								self.log('YES JSON');
+							}
+						};
+						reader.readAsText(file.files[0]);
+					}
+					$(file).unbind('input.raffle change.raffle');
+				}).on('click.raffle', function(){
+					$(window).on('focus.raffle', function(){
+						$(window).unbind('focus.raffle');
+						time = setTimeout(function(){
+							input.unbind('input.raffle change.raffle').remove();
+						}, 3000);
+					});
+				});
+			
+			$("body").append(input);
+			input.trigger('click');
+			return self;
+		},
+		export: function(){
+			var self = this,
+				childs = self.prizes.children(),
+				array = [],
+				text = "",
+				blob, url, link, name, date, arr;
+			if(childs.length){
+				childs.each(function(){
+					var ed = $(this).data(),
+						aq = {
+							bg			: ed.bg,
+							crop		: ed.crop,
+							cropData	: ed.cropData,
+							file		: ed.file,
+							name		: ed.name,
+							number		: ed.number
+						};
+					array.push(aq);
+				});
+				date = new Date();
+				name = date.toLocaleString();
+				arr = name.split(',');
+				arr[1] = $.trim(arr[1].replace(/:/g,"-"));
+				name = arr.join("_") + ".json";
+				
+				text = JSON.stringify(array, null, '\t');
+				blob = new Blob([text], {type: "application/json"});
+				url = window.URL.createObjectURL(blob);
+				link = document.createElement("a");
+				link.href = url;
+				link.download = "export_" + name;
+				document.body.appendChild(link);
+				link.click();
+				setTimeout(function(){
+					window.URL.revokeObjectURL(url);
+					link.remove();
+				}, 0);
+				
+			}
+			return self;
 		}
 	});
 	function Plugin() {
@@ -1419,7 +1652,7 @@ Array.prototype.shuffle = function( b ){
 	
 	
 	
-	/* main */
+
 	$.cookie('lang', _lang, { expires: 360, path: '/' });
 	window.ds = $($('#lotereya > .row')[0]).raffle().data('ps.raffle');
 	$(window).on('load', function(e){
@@ -1432,4 +1665,45 @@ Array.prototype.shuffle = function( b ){
 		}, 3000);
 	});
 	
+	$('a.goto').on('click', function(e){
+		e.preventDefault();
+		//console.log(this);
+		gui.Shell.openExternal(e.target.href);
+		return !1;
+	});
+	$("#chs").on('click', function(){
+		
+		chrome.desktopCapture.chooseDesktopMedia(
+			['window', 'audio'],
+			function(){
+				console.log(arguments);
+			}
+		);
+	});
+	/*
+	document.body.addEventListener('contextmenu', function(ev) { 
+		 ev.preventDefault();
+		 menu.popup(ev.x, ev.y);
+		 return false;
+	});
+	*/
 }( window, document, window.jQuery || jQuery ));
+
+/* Menu */
+	
+	/*
+	var menu2 = new gui.Menu();
+	menu2.append(new gui.MenuItem({label: 'Item 1'}));
+	
+	var subMenu1 = new gui.Menu();
+	subMenu1.append(new gui.MenuItem({label: 'Item 2'}));
+	menu2.append(new gui.MenuItem({
+		label: "Submenu",
+		submenu: subMenu1
+	}));
+	document.body.addEventListener('contextmenu', function(ev) { 
+		 ev.preventDefault();
+		 menu2.popup(ev.x, ev.y);
+		 return false;
+	});
+	*/

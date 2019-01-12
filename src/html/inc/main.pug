@@ -1,4 +1,5 @@
 main.main
+	audio#audio(src="" preload="none" style="display: none;")
 	.container
 		.full.main-wrapper(data-plugin="forestedglass" data-target="main.main" data-blur="15")
 			#lotereya
@@ -44,6 +45,8 @@ main.main
 							button.btn.rf-add#btnadd(data-i18n-title="BTN_ADD_TITLE" tabindex="-1")
 							button.btn.rf-raffle#btnstitch(data-i18n-title="BTN_PRIZERAFLE_TITLE" tabindex="-1")
 							button.btn.rf-clear#btnclear(data-i18n-title="BTN_CLEAR_TITLE" tabindex="-1")
+							button.btn.rf-clear#btnexport(data-i18n-title="BTN_CLEAR_TITLE" tabindex="-1" style="display: none !important;")
+							button.btn.rf-add#btnimport(data-i18n-title="BTN_CLEAR_TITLE" tabindex="-1" style="display: none !important;")
 					.columns.resultraffle
 						h2.text-center.block-center.full.date(data-i18n="PLAYED_RESULT")
 							|&nbsp;
